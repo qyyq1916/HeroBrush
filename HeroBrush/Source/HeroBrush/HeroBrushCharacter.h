@@ -17,13 +17,13 @@ class AHeroBrushCharacter : public AHeroCharacter
 
 public:
 	//variables
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Properties, meta = (AllowPrivateAccess = "true"))
-		float Health = 100;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Properties, meta = (AllowPrivateAccess = "true"))
-		float Energy = 100;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Properties, meta = (AllowPrivateAccess = "true"))
 		float SmoothBlendTime = 0.75f;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FVector AimLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FRotator AimRotation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
 		float TotalHealth = 100.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
@@ -76,7 +76,9 @@ public:
 	void ChangeOnceEnergy(float EnergyRange);
 	void ChangeHealth(bool IsLong, int TimePeriod, float HealthRange);  // 检测如果是长期加血，那么使用的是下面的状态来决定是否停止加血。
 	void ChangeOnceHealth(float HealthRange); // 直接加这么多。
-
+	
+	UFUNCTION()
+		FRotator GetAimRotation();
 	// inline function
 	/** Returns CameraBoom subobject **/
 	//FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
