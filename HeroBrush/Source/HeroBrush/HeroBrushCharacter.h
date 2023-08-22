@@ -37,6 +37,13 @@ class AHeroBrushCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
+
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		USkeletalMeshComponent* MyArms;
+	/** Returns Mesh1P subobject **/
+	USkeletalMeshComponent* GetArms() const { return MyArms; }
+	/** Returns FirstPersonCameraComponent subobject **/
+	UCameraComponent* GetFirstPersonCameraComponent() const { return FollowCamera; }
 public:
 	AHeroBrushCharacter();
 	

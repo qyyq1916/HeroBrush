@@ -49,6 +49,14 @@ AHeroBrushCharacter::AHeroBrushCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
+	MyArms = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Character MyArms"));
+	MyArms->SetOnlyOwnerSee(true);
+	MyArms->SetupAttachment(FollowCamera);
+	MyArms->bCastDynamicShadow = false;
+	MyArms->CastShadow = false;
+	// MyArms->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
+	MyArms->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 }
 
 void AHeroBrushCharacter::BeginPlay()

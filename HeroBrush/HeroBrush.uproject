@@ -1,13 +1,16 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "5.2",
+	"EngineAssociation": "{8B8AD596-494C-1560-0076-5F8F9E428514}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
 		{
 			"Name": "HeroBrush",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
 		}
 	],
 	"Plugins": [
