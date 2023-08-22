@@ -23,18 +23,18 @@ AHeroBrushCharacter::AHeroBrushCharacter()
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
 
-<<<<<<< HEAD
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	MyArms = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Character MyArms"));
 	MyArms->SetOnlyOwnerSee(true);
-	MyArms->SetupAttachment(FollowCamera);
+	MyArms->SetupAttachment(CameraThird);
 	MyArms->bCastDynamicShadow = false;
 	MyArms->CastShadow = false;
 	// MyArms->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	MyArms->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
-=======
+
 	// Create a follow camera
 	CameraThird = CreateDefaultSubobject<UCameraComponent>(TEXT("HeroThirdCamera"));
 	CameraThird->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
@@ -45,7 +45,7 @@ AHeroBrushCharacter::AHeroBrushCharacter()
 	CameraShoot->SetupAttachment(CameraBoom);
 	CameraShoot->SetRelativeLocation(FVector(0.0f, 70.0f, 70.0f));
 
->>>>>>> bc70535b525d22aba96c222bd3c5f2bd4ac76de7
+
 }
 
 void AHeroBrushCharacter::BeginPlay()

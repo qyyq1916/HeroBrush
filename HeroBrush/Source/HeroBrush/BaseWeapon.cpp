@@ -61,6 +61,11 @@ void UBaseWeapon::Fire()
 	if (FireAnimation != nullptr)
 	{
 		// Get the animation object for the arms mesh
+		 UAnimInstance* AnimInstance = Character->GetArms()->GetAnimInstance();
+		if (AnimInstance != nullptr)
+		{
+			AnimInstance->Montage_Play(FireAnimation, 1.f);
+		}
 		//此处需要角色类的动画
 		///** Returns Mesh1P subobject **/
 		//样例中原文为：USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
