@@ -60,7 +60,7 @@ public:
 	/** Returns Mesh1P subobject **/
 	USkeletalMeshComponent* GetArms() const { return MyArms; }
 	/** Returns FirstPersonCameraComponent subobject **/
-	UCameraComponent* GetFirstPersonCameraComponent() const { return FollowCamera; }
+	UCameraComponent* GetFirstPersonCameraComponent() const { return CameraThird; }
 public:
 	AHeroBrushCharacter();
 	
