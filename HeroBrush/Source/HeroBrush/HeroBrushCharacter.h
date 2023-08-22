@@ -54,6 +54,13 @@ public:
 	//	class UInputAction* ChangeViewAction;
 
 
+
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		USkeletalMeshComponent* MyArms;
+	/** Returns Mesh1P subobject **/
+	USkeletalMeshComponent* GetArms() const { return MyArms; }
+	/** Returns FirstPersonCameraComponent subobject **/
+	UCameraComponent* GetFirstPersonCameraComponent() const { return FollowCamera; }
 public:
 	AHeroBrushCharacter();
 	
