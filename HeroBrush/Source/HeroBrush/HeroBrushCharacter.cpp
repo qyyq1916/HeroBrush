@@ -152,6 +152,6 @@ void AHeroBrushCharacter::ChangeOnceEnergy(float EnergyRange) {
 		CurEnergy = 0.0f;
 }
 
-FRotator AHeroBrushCharacter::GetAimRotation() {
+//FRotator AHeroBrushCharacter::GetAimRotation() {
 
-}
+//}

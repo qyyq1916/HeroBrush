@@ -10,7 +10,7 @@
 class AHeroBrushCharacter;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class HEROBRUSH_API UBaseWeapon : public UActorComponent
+class HEROBRUSH_API UBaseWeapon : public USkeletalMeshComponent
 {
 	GENERATED_BODY()
 

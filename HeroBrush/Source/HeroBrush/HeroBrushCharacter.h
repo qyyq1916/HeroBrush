@@ -77,8 +77,8 @@ public:
 	void ChangeHealth(bool IsLong, int TimePeriod, float HealthRange);  // 检测如果是长期加血，那么使用的是下面的状态来决定是否停止加血。
 	void ChangeOnceHealth(float HealthRange); // 直接加这么多。
 	
-	UFUNCTION()
-		FRotator GetAimRotation();
+	//UFUNCTION()
+		//FRotator GetAimRotation();
 	// inline function
 	/** Returns CameraBoom subobject **/
 	//FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

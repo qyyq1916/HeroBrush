@@ -89,11 +89,11 @@ void UBaseWeapon::AttachWeapon(AHeroBrushCharacter* TargetCharacter)
 
 	// Attach the weapon to the First Person Character
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
-	//以下语句中GetMesh1P()替换为开火动画
-	//AttachToComponent(Character->GetMesh1P(), AttachmentRules, FName(TEXT("GripPoint")));
+	//以下语句中GetMesh1P()返回值为角色网格体
+	AttachToComponent(Character->GetArms(), AttachmentRules, FName(TEXT("hand_r")));
 
 	// switch bHasRifle so the animation blueprint can switch to another animation set
-	//依据这个bool值bHasRifle切换使用的动画集，在蓝图里写的切换逻辑
+	//依据这个bool值bHasRifle切换使用的动画集，（应该是）在蓝图里写的切换逻辑（应该是）
 	//Character->SetHasRifle(true);
 
 	// Set up action bindings
