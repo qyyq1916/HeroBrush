@@ -11,6 +11,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/GameplayStatics.h"
 #include "BaseWeaponBullets.h"
+#include "Components/TextRenderComponent.h"
+#include "Item.h"
+#include "Weapon.h"
 //////////////////////////////////////////////////////////////////////////
 // AHeroBrushCharacter
 
@@ -99,7 +102,30 @@ void AHeroBrushCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 		PlayerInputComponent->BindAction("Flash_Attack", IE_Pressed, this, &AHeroBrushCharacter::Flash_Attack);
 		PlayerInputComponent->BindAction("TurnOnSpeed", IE_Pressed, this, &AHeroBrushCharacter::TurnOnSpeed);
 		PlayerInputComponent->BindAction("TurnOffSpeed", IE_Released, this, &AHeroBrushCharacter::TurnOffSpeed);
+		
+		//Interact
+		PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AHeroBrushCharacter::OnInteract);
 	}
+
+}
+
+void AHeroBrushCharacter::OnInteract() 
+{
+	AWeapon* Weapon = Cast<AWeapon>(ActiveOverlapItem);
+	if (Weapon) {
+		Weapon->Equip(this);
+		ActiveOverlapItem = nullptr;
+	}
+
+}
+
+void AHeroBrushCharacter::SetWeapon(AWeapon* Weapon)
+{
+	if (EquiqedWeapon) {
+		EquiqedWeapon->Destroy();
+	}
+	EquiqedWeapon = Weapon;
+	Weapon->TextCue->SetVisibility(false);
 
 }
 
