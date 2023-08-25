@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "HeroBrushCharacter.h"
 #include "Camera/CameraComponent.h"
@@ -10,7 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "BaseWeaponBullets.h"
 //////////////////////////////////////////////////////////////////////////
 // AHeroBrushCharacter
 
@@ -21,7 +21,6 @@ AHeroBrushCharacter::AHeroBrushCharacter()
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
-
 
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
@@ -38,14 +37,14 @@ AHeroBrushCharacter::AHeroBrushCharacter()
 	// Create a follow camera
 	CameraThird = CreateDefaultSubobject<UCameraComponent>(TEXT("HeroThirdCamera"));
 	CameraThird->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	CameraThird->SetRelativeLocation(FVector(0.0f, 30.0f, 30.0f));
+	CameraThird->SetRelativeLocation(FVector(20.0f, 100.0f, 100.0f));
 	CameraThird->bUsePawnControlRotation = true; // Camera does not rotate relative to arm
 
 	CameraShoot = CreateDefaultSubobject<UCameraComponent>(TEXT("HeroShootCamera"));
 	CameraShoot->SetupAttachment(CameraBoom);
-	CameraShoot->SetRelativeLocation(FVector(0.0f, 70.0f, 70.0f));
+	CameraShoot->SetRelativeLocation(FVector(30.0f, 80.0f, 80.0f));
 
-
+	
 }
 
 void AHeroBrushCharacter::BeginPlay()
@@ -58,12 +57,20 @@ void AHeroBrushCharacter::BeginPlay()
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
-		
-
 		}
 	}
+
 	
 }
+//void AHeroBrushCharacter::EndPlay()
+//{
+//	Super::EndPlay();
+//	
+//	GetWorld()->GetTimerManager().ClearTimer(TimerHandle_Flash_Attack);
+//	GetWorld()->GetTimerManager().ClearTimer(TimerHandle_Flash_waitTime);
+//	GetWorld()->GetTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+//
+//}
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -85,10 +92,15 @@ void AHeroBrushCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 
 		//changeView
 		PlayerInputComponent->BindAction("ChangeView", IE_Pressed, this, &AHeroBrushCharacter::ChangeView);
-
+		PlayerInputComponent->BindAction("Primary_Attack", IE_Pressed, this, &AHeroBrushCharacter::Primary_Attack);
+		PlayerInputComponent->BindAction("Burden_Attack", IE_Pressed, this, &AHeroBrushCharacter::Burden_Attack);
+		PlayerInputComponent->BindAction("Flash_Attack", IE_Pressed, this, &AHeroBrushCharacter::Flash_Attack);
+		PlayerInputComponent->BindAction("TurnOnSpeed", IE_Pressed, this, &AHeroBrushCharacter::TurnOnSpeed);
+		PlayerInputComponent->BindAction("TurnOffSpeed", IE_Released, this, &AHeroBrushCharacter::TurnOffSpeed);
 	}
 
 }
+
 
 void AHeroBrushCharacter::ChangeView()
 {
@@ -152,6 +164,121 @@ void AHeroBrushCharacter::ChangeOnceEnergy(float EnergyRange) {
 		CurEnergy = 0.0f;
 }
 
-//FRotator AHeroBrushCharacter::GetAimRotation() {
+//Basic Attack
+void AHeroBrushCharacter::Primary_Attack() {
+	if (AttackAnimSeq == 0) {
+		PlayAnimMontage(AttackAnim1);
+		HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+		AttackAnimSeq++;
+		AttackAnimSeq = AttackAnimSeq % 2;
+	}
+	else if (AttackAnimSeq == 1) {
+		PlayAnimMontage(AttackAnim2);
+		HandLocation = GetMesh()->GetSocketLocation("Muzzle_02");
+		AttackAnimSeq++;
+		AttackAnimSeq = AttackAnimSeq % 2;
+	}
+	else if (AttackAnimSeq == 2) {
+		PlayAnimMontage(AttackAnim3);
+		HandLocation = GetMesh()->GetSocketLocation("Muzzle_03");
+		AttackAnimSeq++;
+		AttackAnimSeq = AttackAnimSeq % 3;
+	}
 
-//}
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AHeroBrushCharacter::PrimaryAttack_TimeElapsed, 0.2f);
+	
+}
+
+// you can set shoot location and shoot speed
+void AHeroBrushCharacter::PrimaryAttack_TimeElapsed() {
+
+	FromLocation = HandLocation; // 设置开始的rotation
+	GetAimRotation(); // 得到rotation
+
+	const FTransform SpawnTM = FTransform(AimRotation, FromLocation);
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
+
+	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams); // 使用已有的蓝图加载，在蓝图中设置
+}
+
+void AHeroBrushCharacter::Burden_Attack()
+{
+	PlayAnimMontage(BurdenAnim);
+	HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+
+	GetWorldTimerManager().SetTimer(TimerHandle_Burden_Attack, this, &AHeroBrushCharacter::Burden_Attack_TimeElapsed, 1.0f);
+}
+void AHeroBrushCharacter::Burden_Attack_TimeElapsed() {
+
+	FromLocation = HandLocation; // 设置开始的rotation
+	
+	// GetAimRotation(); // 得到rotation
+
+	const FTransform SpawnTM = FTransform(this->GetActorRotation(), FromLocation);
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
+
+	GetWorld()->SpawnActor<AActor>(ProjectileClass_Burden, SpawnTM, SpawnParams); // 使用已有的蓝图加载，在蓝图中设置
+}
+void AHeroBrushCharacter::Flash_Attack()
+{
+	if (isFlashActive)
+	{
+		isFlashActive = false;
+		FVector PresentLocation = this->GetActorLocation();
+		FVector ForwardLocation = GetActorForwardVector();
+		FVector NextLocation = PresentLocation + ForwardLocation * FlashDistance;
+
+		FromLocation = PresentLocation;
+		AimLocation = NextLocation;
+		GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AHeroBrushCharacter::Flash_TimeElapsed, 0.2f);
+
+
+		this->SetActorLocation(NextLocation, false);
+	}
+}
+
+void AHeroBrushCharacter::Flash_TimeElapsed() {
+
+	
+	GetAimRotation(); // 得到rotation
+
+	const FTransform SpawnTM = FTransform(AimRotation, FromLocation);
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
+
+	GetWorld()->SpawnActor<AActor>(ProjectileClass_Flash, SpawnTM, SpawnParams); // 使用已有的蓝图加载，在蓝图中设置
+}
+
+void AHeroBrushCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	// 如果已经被使用进入冷却，记录时间，直到time=0，则技能继续可以被使用，不会进入冷却状态。
+	if (!isFlashActive) {
+		Flash_Attack_Time--;
+	}
+	if (Flash_Attack_Time <= 0) {
+		isFlashActive = true;
+		Flash_Attack_Time = 180;
+	}
+	
+}
+
+void AHeroBrushCharacter::TurnOnSpeed()
+{
+	//SpeedUpDelegate.BindUObject(this, &AHealthCharacter::ChangeOnceEnergy, -0.5f);
+	GetCharacterMovement()->MaxWalkSpeed = SetSpeedMax;
+
+	//GetWorld()->GetTimerManager().SetTimer(SpeedUpTimer, SpeedUpDelegate, 0.05f, true, -1);
+
+}
+void AHeroBrushCharacter::TurnOffSpeed()
+{
+	//SpeedUpDelegate.Unbind();
+	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+	//GetWorld()->GetTimerManager().ClearTimer(SpeedUpTimer);
+}

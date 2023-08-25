@@ -36,7 +36,15 @@ public:
 public:
 	// Sets default values for this character's properties
 	AHeroCharacter();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FVector AimLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FVector FromLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FRotator AimRotation;
 
+	UFUNCTION()
+		FRotator GetAimRotation();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

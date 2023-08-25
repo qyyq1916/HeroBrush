@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "HeroCharacter.h"
@@ -108,4 +108,7 @@ void AHeroCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
-
+FRotator AHeroCharacter::GetAimRotation() {
+	AimRotation = (AimLocation - FromLocation).ToOrientationRotator();
+	return AimRotation;
+}

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -14,13 +14,16 @@ class HEROBRUSH_API ABaseWeaponBullets : public AActor
 {
 	GENERATED_BODY()
 
-		/** Sphere collision component */
-		UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
+	/** Sphere collision component */
+	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
 		USphereComponent* CollisionComp;
 
 	/** Projectile movement component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 		UProjectileMovementComponent* ProjectileMovement;
+	/*Effect Component*/
+	UPROPERTY(VisibleAnywhere)
+		UParticleSystemComponent* EffectComp; 
 
 public:
 	// Sets default values for this actor's properties
@@ -35,5 +38,8 @@ public:
 
 	/** Returns ProjectileMovement subobject **/
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
+		float BulletDamage = 10.f;//基础子弹伤害
+	UFUNCTION()
+		void ChangeBulletDamage(float change);
 };
