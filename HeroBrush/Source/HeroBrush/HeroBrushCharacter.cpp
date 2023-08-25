@@ -170,7 +170,7 @@ void AHeroBrushCharacter::Primary_Attack() {
 		AttackAnimSeq = AttackAnimSeq % 3;
 	}
 
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AHeroBrushCharacter::PrimaryAttack_TimeElapsed, 0.2f);
+	//GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AHeroBrushCharacter::PrimaryAttack_TimeElapsed, 0.2f);
 	
 }
 
@@ -193,8 +193,9 @@ void AHeroBrushCharacter::Burden_Attack()
 	PlayAnimMontage(BurdenAnim);
 	HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
-	GetWorldTimerManager().SetTimer(TimerHandle_Burden_Attack, this, &AHeroBrushCharacter::Burden_Attack_TimeElapsed, 1.0f);
+	//GetWorldTimerManager().SetTimer(TimerHandle_Burden_Attack, this, &AHeroBrushCharacter::Burden_Attack_TimeElapsed, 1.0f);
 }
+
 void AHeroBrushCharacter::Burden_Attack_TimeElapsed() {
 
 	FromLocation = HandLocation; // 设置开始的rotation

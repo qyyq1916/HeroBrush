@@ -119,16 +119,17 @@ public:
 	//virtual void EndPlay(); 想要使用这个销毁定时器
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
+	void PrimaryAttack_TimeElapsed();
+
+	UFUNCTION(BlueprintCallable)
+	void Burden_Attack_TimeElapsed();
 
 protected:
 	//Basic Attack Func(No Weapon)
 	void Primary_Attack();
 
-	void PrimaryAttack_TimeElapsed();
-
 	void Burden_Attack();
-
-	void Burden_Attack_TimeElapsed();
 
 	void Flash_Attack();
 

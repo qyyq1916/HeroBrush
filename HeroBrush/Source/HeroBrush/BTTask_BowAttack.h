@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
+#include "GameFramework/Character.h"
 #include "BTTask_BowAttack.generated.h"
 
 /**
@@ -20,5 +21,7 @@ class HEROBRUSH_API UBTTask_BowAttack : public UBTTaskNode
 
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AActor> ProjectileClass;
+	UPROPERTY(EditAnywhere, Category = "AI_Attack")
+		UAnimMontage* AttackAnim1;
 };
 

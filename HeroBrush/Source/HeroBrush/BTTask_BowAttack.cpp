@@ -29,7 +29,7 @@ EBTNodeResult::Type UBTTask_BowAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 			return EBTNodeResult::Failed;
 		}
 
-		FVector BowLocation = MyPawn->GetMesh()->GetSocketLocation("hand_l");
+		FVector BowLocation = MyPawn->GetMesh()->GetSocketLocation("Muzzle_01");
 		
 		FVector Direction = TargetActor->GetActorLocation() - BowLocation;
 
@@ -39,9 +39,9 @@ EBTNodeResult::Type UBTTask_BowAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 
 		params.Instigator = MyPawn;
 		params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-		ensure(ProjectileClass);
 		
+		ensure(ProjectileClass);
+		MyPawn->PlayAnimMontage(AttackAnim1);
 		AActor* NewProj = GetWorld()->SpawnActor<AActor>(ProjectileClass, BowLocation, BowRotation);
 		return NewProj ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
 	}
