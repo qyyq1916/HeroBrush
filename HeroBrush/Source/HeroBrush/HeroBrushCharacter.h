@@ -57,6 +57,13 @@ public:
 	void ChangeView();
 	void ChangeEnergy(bool IsLong, int TimePeriod, float EnergyRange);
 	void ChangeOnceEnergy(float EnergyRange);
+	
+	//Interact with other objects(weapons)
+	UFUNCTION()
+		void OnInteract();
+
+	void SetWeapon(class AWeapon* Weapon);
+
 
 	// inline function
 	///** Returns CameraBoom subobject **/
@@ -64,6 +71,11 @@ public:
 	///** Returns FollowCamera subobject **/
 	//FORCEINLINE class UCameraComponent* GetFollowCameraFirst() const { return CameraFirst; }
 	//FORCEINLINE class UCameraComponent* GetFollowCameraThird() const { return CameraThird; }
+
+
+	//Overlap with other objects
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class AWeapon* ActiveOverlapItem;
 
 
 protected:
@@ -114,6 +126,12 @@ protected:
 	//// 加速事件代理,在有能量消耗的时候使用。
 	//FTimerDelegate SpeedUpDelegate;
 
+	//The Weapon Character Armed
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		class AWeapon* EquiqedWeapon;
+
+
 public:
 	virtual void BeginPlay();
 	//virtual void EndPlay(); 想要使用这个销毁定时器
@@ -141,5 +159,6 @@ protected:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor);
 
 	void CheckTouchActor(AActor* OtherActor);
+
 };
 
