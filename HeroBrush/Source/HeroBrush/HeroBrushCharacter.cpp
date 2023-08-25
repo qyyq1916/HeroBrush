@@ -44,7 +44,6 @@ AHeroBrushCharacter::AHeroBrushCharacter()
 	CameraShoot->SetupAttachment(CameraBoom);
 	CameraShoot->SetRelativeLocation(FVector(30.0f, 80.0f, 80.0f));
 
-	
 }
 
 void AHeroBrushCharacter::BeginPlay()
@@ -59,9 +58,12 @@ void AHeroBrushCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
-
-	
+	PostInitializeComponents();
 }
+
+
+
+
 //void AHeroBrushCharacter::EndPlay()
 //{
 //	Super::EndPlay();
@@ -125,24 +127,7 @@ void AHeroBrushCharacter::ChangeView()
 	}
 }
 
-void AHeroBrushCharacter::ChangeHealth(bool IsLong, int TimePeriod, float HealthRange) {
 
-	if (IsLong) {
-		
-	}
-	else {
-		ChangeOnceHealth(HealthRange);
-	}
-
-}
-void AHeroBrushCharacter::ChangeOnceHealth(float HealthRange) {
-	if (CurHealth + HealthRange < TotalHealth && CurHealth + HealthRange > 0)
-		CurHealth += HealthRange;
-	else if (CurHealth + HealthRange >= TotalHealth)
-		CurHealth = TotalHealth;
-	else if (CurHealth + HealthRange <= 0)
-		CurHealth = 0.0f;
-}
 
 
 
@@ -213,8 +198,6 @@ void AHeroBrushCharacter::Burden_Attack()
 void AHeroBrushCharacter::Burden_Attack_TimeElapsed() {
 
 	FromLocation = HandLocation; // 设置开始的rotation
-	
-	// GetAimRotation(); // 得到rotation
 
 	const FTransform SpawnTM = FTransform(this->GetActorRotation(), FromLocation);
 	FActorSpawnParameters SpawnParams;
@@ -281,4 +264,20 @@ void AHeroBrushCharacter::TurnOffSpeed()
 	//SpeedUpDelegate.Unbind();
 	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
 	//GetWorld()->GetTimerManager().ClearTimer(SpeedUpTimer);
+}
+
+void AHeroBrushCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	CheckTouchActor(OtherActor);
+
+}
+void AHeroBrushCharacter::CheckTouchActor(AActor* OtherActor)
+{
+	auto actor = Cast<ABaseWeaponBullets>(OtherActor);
+	// 如果是来自敌人的bullets
+	if (actor != nullptr && !actor->DamageFrom) {
+		if (actor->BulletsInfo == 0) {
+			ChangeHealth(false, -1, -5.0f); // 第一类的掉血
+		} 
+	}
 }

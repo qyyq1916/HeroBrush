@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -31,7 +31,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* LookAction;
 
-	
+	// health system
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
+		float TotalHealth = 100.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
+		float CurHealth = 100.0f;
+	void ChangeHealth(bool IsLong, int TimePeriod, float HealthRange);  // 检测如果是长期加血，那么使用的是下面的状态来决定是否停止加血。
+	void ChangeOnceHealth(float HealthRange); // 直接加这么多。
 		
 public:
 	// Sets default values for this character's properties

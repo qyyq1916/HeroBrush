@@ -112,3 +112,23 @@ FRotator AHeroCharacter::GetAimRotation() {
 	AimRotation = (AimLocation - FromLocation).ToOrientationRotator();
 	return AimRotation;
 }
+
+
+void AHeroCharacter::ChangeHealth(bool IsLong, int TimePeriod, float HealthRange) {
+
+	if (IsLong) {
+
+	}
+	else {
+		ChangeOnceHealth(HealthRange);
+	}
+
+}
+void AHeroCharacter::ChangeOnceHealth(float HealthRange) {
+	if (CurHealth + HealthRange < TotalHealth && CurHealth + HealthRange > 0)
+		CurHealth += HealthRange;
+	else if (CurHealth + HealthRange >= TotalHealth)
+		CurHealth = TotalHealth;
+	else if (CurHealth + HealthRange <= 0)
+		CurHealth = 0.0f;
+}

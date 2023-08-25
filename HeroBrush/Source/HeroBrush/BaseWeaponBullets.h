@@ -38,6 +38,12 @@ public:
 
 	/** Returns ProjectileMovement subobject **/
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
+		bool DamageFrom = true; // true来自于角色，false来自于敌人
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
+		int BulletsInfo = 0; // 定义一个子弹的系统，可以是角色的不同类型的子弹，以及敌人的不同类型的子弹。
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
 		float BulletDamage = 10.f;//基础子弹伤害
 	UFUNCTION()
