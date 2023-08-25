@@ -8,6 +8,7 @@ Intermediate/
 DerivedDataCache/
 Saved/
 Content/StartContent/
+ProjectileClass/
 ThirdParty/
 Build/
 
@@ -24,3 +25,8 @@ Build/
 *.xcworkspace
 
 
+Content/AnimStarterPack
+Content/ParagonGideon
+Content/Rapier_AnimSetAttack
+Content/SkeletonMage
+Context/GabrielAguiarProd
