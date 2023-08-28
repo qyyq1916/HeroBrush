@@ -5,7 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/WidgetComponent.h"
 #include "BaseWeaponBullets.h"
-
+#include "AOEItem.h"
 // Sets default values
 AEnemy::AEnemy()
 {
@@ -45,7 +45,6 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemy::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	CheckTouchActor(OtherActor);
-
 }
 void AEnemy::CheckTouchActor(AActor* OtherActor)
 {
@@ -59,4 +58,29 @@ void AEnemy::CheckTouchActor(AActor* OtherActor)
 			ChangeHealth(false, -1, -20.0f);
 		}
 	}
+
+	// aoe的来源
+	auto actor1 = Cast<AAOEItem>(OtherActor);
+	if (actor1 != nullptr && actor1->DamageFrom) {
+		if (actor1->AOEInfo == 0) {
+
+			ChangeHealth(true, 1, actor1->AOEDamage);
+		}
+	}
+}
+void AEnemy::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	CheckOffActor(OtherActor);
+}
+void AEnemy::CheckOffActor(AActor* OtherActor)
+{
+	// aoe的来源
+	auto actor1 = Cast<AAOEItem>(OtherActor);
+	if (actor1 != nullptr && actor1->DamageFrom) {
+		if (actor1->AOEInfo == 0) {
+			GetWorld()->GetTimerManager().ClearTimer(HealthTimer);
+			HealthDelegate.Unbind();
+		}
+	}
+	
 }

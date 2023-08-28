@@ -30,8 +30,10 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor);
-
+	virtual void NotifyActorEndOverlap(AActor* OtherActor);
+	
 	void CheckTouchActor(AActor* OtherActor);
+	void CheckOffActor(AActor* OtherActor);
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Info, meta = (AllowPrivateAccess = "true"))
 		class UWidgetComponent* StatusWidgetComponent;

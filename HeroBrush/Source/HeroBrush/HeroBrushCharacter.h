@@ -120,7 +120,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "SpeedUp")
 		float SetSpeedMax = 1000.0f;
 
-	
+	// AOE
+	UPROPERTY(EditAnywhere, Category = "AOE_Attack")
+		UAnimMontage* AOEAnim; // AOE_Attack
+	//UPROPERTY(EditAnywhere, Category = "AOE_Attack")
+	//	TSubclassOf<AActor> ProjectileClass_AOE;
 
 
 	//// 加速事件代理,在有能量消耗的时候使用。
@@ -143,6 +147,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Burden_Attack_TimeElapsed();
 
+	UFUNCTION(BlueprintCallable)
+		void AOE_Attack_TimeElapsed();
+
 protected:
 	//Basic Attack Func(No Weapon)
 	void Primary_Attack();
@@ -161,5 +168,6 @@ protected:
 
 	void CheckTouchActor(AActor* OtherActor);
 
+	void AOE_Attack();
 };
 

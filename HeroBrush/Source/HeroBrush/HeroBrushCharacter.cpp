@@ -14,6 +14,7 @@
 #include "Components/TextRenderComponent.h"
 #include "Item.h"
 #include "Weapon.h"
+#include "AOEItem.h"
 //////////////////////////////////////////////////////////////////////////
 // AHeroBrushCharacter
 
@@ -105,6 +106,10 @@ void AHeroBrushCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 		
 		//Interact
 		PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AHeroBrushCharacter::OnInteract);
+
+		PlayerInputComponent->BindAction("AOE_Attack", IE_Pressed, this, &AHeroBrushCharacter::AOE_Attack);
+		
+
 	}
 
 }
@@ -181,13 +186,13 @@ void AHeroBrushCharacter::Primary_Attack() {
 		PlayAnimMontage(AttackAnim1);
 		HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 		AttackAnimSeq++;
-		AttackAnimSeq = AttackAnimSeq % 2;
+		AttackAnimSeq = AttackAnimSeq % 3;
 	}
 	else if (AttackAnimSeq == 1) {
 		PlayAnimMontage(AttackAnim2);
 		HandLocation = GetMesh()->GetSocketLocation("Muzzle_02");
 		AttackAnimSeq++;
-		AttackAnimSeq = AttackAnimSeq % 2;
+		AttackAnimSeq = AttackAnimSeq % 3;
 	}
 	else if (AttackAnimSeq == 2) {
 		PlayAnimMontage(AttackAnim3);
@@ -296,7 +301,6 @@ void AHeroBrushCharacter::TurnOffSpeed()
 void AHeroBrushCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	CheckTouchActor(OtherActor);
-
 }
 void AHeroBrushCharacter::CheckTouchActor(AActor* OtherActor)
 {
@@ -307,4 +311,23 @@ void AHeroBrushCharacter::CheckTouchActor(AActor* OtherActor)
 			ChangeHealth(false, -1, -5.0f); // 第一类的掉血
 		} 
 	}
+
+	// aoe的来源
+	auto actor1 = Cast<AAOEItem>(OtherActor);
+	if(actor1 != nullptr && !actor1->DamageFrom) {
+		if (actor1->AOEInfo == 0) {
+			ChangeHealth(false, -1, actor1->AOEDamage);
+		}
+	}
+		
+}
+
+void AHeroBrushCharacter::AOE_Attack()
+{
+	PlayAnimMontage(AOEAnim);	
+}
+void AHeroBrushCharacter::AOE_Attack_TimeElapsed()
+{
+	AAOEItem* tempAoe = GetWorld()->SpawnActor<AAOEItem>(GetActorLocation(), GetActorRotation());
+	//UE_LOG(LogTemp, Warning, TEXT("AAOEItemLOC_During:%f,%f,%f"), tempAoe->GetActorLocation().X, tempAoe->GetActorLocation().Y, tempAoe->GetActorLocation().Z);
 }
