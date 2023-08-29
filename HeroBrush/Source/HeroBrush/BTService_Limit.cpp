@@ -15,6 +15,7 @@ void UBTService_Limit::TickNode (UBehaviorTreeComponent& OwnerComp, uint8* NodeM
     if (ensure(BlackBoardComp))
     {
         AActor* TargetActor = Cast<AActor>(BlackBoardComp->GetValueAsObject("TargetActor"));
+       
         if (TargetActor)
         {
             AAIController* MyController = OwnerComp.GetAIOwner();
@@ -25,7 +26,7 @@ void UBTService_Limit::TickNode (UBehaviorTreeComponent& OwnerComp, uint8* NodeM
                 {
                     float DistanceTo = FVector::Distance(TargetActor->GetActorLocation(), AIPawn->GetActorLocation());
                     
-                   bool bWithinLimit = DistanceTo < 800.f;
+                   bool bWithinLimit = DistanceTo < 1600.f;
 
                     BlackBoardComp->SetValueAsBool(LimitKey.SelectedKeyName, bWithinLimit);
                 }
