@@ -60,7 +60,7 @@ void ABaseWeaponBullets::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
-		//给被命中的物体一个冲量
+		//给被命中的物体一个冲量	
 
 		UGameplayStatics::ApplyDamage(this, BulletDamage, nullptr, OtherActor, UDamageType::StaticClass());
 		

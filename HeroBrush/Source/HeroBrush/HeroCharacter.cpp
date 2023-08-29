@@ -117,7 +117,9 @@ FRotator AHeroCharacter::GetAimRotation() {
 void AHeroCharacter::ChangeHealth(bool IsLong, int TimePeriod, float HealthRange) {
 
 	if (IsLong) {
-
+		HealthDelegate.BindUObject(this, &AHeroCharacter::ChangeOnceHealth, HealthRange); // 绑定带参数HealthRange的这个函数和HealthDelegate.
+		GetWorld()->GetTimerManager().SetTimer(HealthTimer, HealthDelegate, TimePeriod, true, -1); // 循环调用每TimePeriod使用一次，一直循环
+		// 什么时候离开，应该在离开这个邻域之后停止掉血，这个什么时候停止写在我们的子类里面
 	}
 	else {
 		ChangeOnceHealth(HealthRange);

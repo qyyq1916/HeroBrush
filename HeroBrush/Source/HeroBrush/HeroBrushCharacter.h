@@ -121,7 +121,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "SpeedUp")
 		float SetSpeedMax = 1000.0f;
 
-	
+	// AOE
+	UPROPERTY(EditAnywhere, Category = "AOE_Attack")
+		UAnimMontage* AOEAnim; // AOE_Attack
+	//UPROPERTY(EditAnywhere, Category = "AOE_Attack")
+	//	TSubclassOf<AActor> ProjectileClass_AOE;
 
 
 	//// 加速事件代理,在有能量消耗的时候使用。
@@ -138,16 +142,20 @@ public:
 	//virtual void EndPlay(); 想要使用这个销毁定时器
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
+	void PrimaryAttack_TimeElapsed();
+
+	UFUNCTION(BlueprintCallable)
+	void Burden_Attack_TimeElapsed();
+
+	UFUNCTION(BlueprintCallable)
+		void AOE_Attack_TimeElapsed();
 
 protected:
 	//Basic Attack Func(No Weapon)
 	void Primary_Attack();
 
-	void PrimaryAttack_TimeElapsed();
-
 	void Burden_Attack();
-
-	void Burden_Attack_TimeElapsed();
 
 	void Flash_Attack();
 
@@ -163,6 +171,7 @@ protected:
 
 	void CheckForInteractables();
 
+	void AOE_Attack();
 };
 
 //定义数据类型
