@@ -14,6 +14,9 @@
 #include "Components/TextRenderComponent.h"
 #include "Item.h"
 #include "Weapon.h"
+#include "GameplayController.h"
+#include "Interactable.h"
+
 //////////////////////////////////////////////////////////////////////////
 // AHeroBrushCharacter
 
@@ -275,6 +278,8 @@ void AHeroBrushCharacter::Tick(float DeltaTime)
 		Flash_Attack_Time = 180;
 	}
 	
+	CheckForInteractables();
+
 }
 
 void AHeroBrushCharacter::TurnOnSpeed()
@@ -306,4 +311,29 @@ void AHeroBrushCharacter::CheckTouchActor(AActor* OtherActor)
 			ChangeHealth(false, -1, -5.0f); // 第一类的掉血
 		} 
 	}
+}
+
+void AHeroBrushCharacter::CheckForInteractables() {
+	// 射线拾取
+	FHitResult HitResult; // 存储碰撞的结果的变量
+
+	FVector StartTrace = CameraBoom->GetComponentLocation(); // 射线起始点
+	FVector EndTrace = (CameraBoom->GetForwardVector() * 300) + StartTrace; // 射线终止点。
+
+	FCollisionQueryParams QueryParams; // 储存了碰撞相关的信息
+	QueryParams.AddIgnoredActor(this); // 将我们角色自身忽略掉，减少性能开销
+
+	AGameplayController* controller = Cast<AGameplayController>(GetController()); // 玩家控制器
+
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Visibility, QueryParams) && controller) {
+		//检查我们点击的项目是否是一个可交互的项目
+		if (AInteractable* Interactable = Cast<AInteractable>(HitResult.GetActor())) {
+			controller->CurrentInteractable = Interactable;
+			return;
+		}
+	}
+
+	//如果我们没有击中任何东西，或者我们击中的东西不是一个可交互的，设置currentinteractable为nullptr
+	controller->CurrentInteractable = nullptr;
+
 }
