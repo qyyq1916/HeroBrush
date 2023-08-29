@@ -336,7 +336,7 @@ void AHeroBrushCharacter::AOE_Attack_TimeElapsed()
 	AAOEItem* tempAoe = GetWorld()->SpawnActor<AAOEItem>(GetActorLocation(), GetActorRotation());
 	//UE_LOG(LogTemp, Warning, TEXT("AAOEItemLOC_During:%f,%f,%f"), tempAoe->GetActorLocation().X, tempAoe->GetActorLocation().Y, tempAoe->GetActorLocation().Z);
 }
-}
+
 
 void AHeroBrushCharacter::CheckForInteractables() {
 	// 射线拾取
