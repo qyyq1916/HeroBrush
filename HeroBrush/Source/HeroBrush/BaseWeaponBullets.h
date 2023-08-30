@@ -45,7 +45,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
 		int BulletsInfo = 0; // 定义一个子弹的系统，可以是角色的不同类型的子弹，以及敌人的不同类型的子弹。
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
-		float BulletDamage = 10.f;//基础子弹伤害
+		float BulletDamage = -10.f;//基础子弹伤害
 	UFUNCTION()
 		void ChangeBulletDamage(float change);
 };

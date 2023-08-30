@@ -90,8 +90,22 @@ protected:
 		UAnimMontage* AttackAnim2;
 	UPROPERTY(EditAnywhere, Category = "Primary_Attack")
 		UAnimMontage* AttackAnim3;
-	UPROPERTY(VisibleAnywhere)
-		FTimerHandle TimerHandle_PrimaryAttack;
+		
+	UFUNCTION()
+		void ChangePrimary_Attack_CD();
+	UFUNCTION()
+		void PlayPrimaryAttackAnim();
+	
+	bool Primary_Attack_CD = true;
+	FTimerHandle TimerHandle_PrimaryAttack;
+	FTimerHandle TimerHandle_PrimaryAttack_CD;
+
+	UPROPERTY(EditAnywhere)
+		bool isQuickAttack = false;
+	UFUNCTION(BlueprintCallable)
+		void ChangeQuickAttack();
+	UFUNCTION(BlueprintCallable)
+		bool GetIsQucikAttack();
 
 	int AttackAnimSeq = 0; // anim control
 	FVector HandLocation; // attack的出发点
@@ -100,13 +114,20 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Burden_Attack")
 		UAnimMontage* BurdenAnim; // Burden_Attack
 	UPROPERTY(EditAnywhere, Category = "Burden_Attack")
+		UAnimMontage* BurdenFastAnim; // Burden_Attack
+	UPROPERTY(EditAnywhere, Category = "Burden_Attack")
 		TSubclassOf<AActor> ProjectileClass_Burden;
+
 	UPROPERTY(VisibleAnywhere)
 		FTimerHandle TimerHandle_Burden_Attack;
 
 	// Flash Attack
 	UPROPERTY(EditAnywhere, Category = "Flash_Attack")
 		TSubclassOf<AActor> ProjectileClass_Flash;
+	UPROPERTY(EditAnywhere, Category = "Flash_Attack")
+		UAnimMontage* Flash_In_Anim;
+	UPROPERTY(EditAnywhere, Category = "Flash_Attack")
+		UAnimMontage* Flash_Out_Anim;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flash_Attack")
 		float FlashDistance = 600.0f;
 	UPROPERTY(VisibleAnywhere)
@@ -124,8 +145,15 @@ protected:
 	// AOE
 	UPROPERTY(EditAnywhere, Category = "AOE_Attack")
 		UAnimMontage* AOEAnim; // AOE_Attack
-	//UPROPERTY(EditAnywhere, Category = "AOE_Attack")
-	//	TSubclassOf<AActor> ProjectileClass_AOE;
+
+	// 受伤动画
+	UPROPERTY(EditAnywhere, Category = "Character_Effect")
+		UAnimMontage* HurtAnim;
+	// 死亡动画
+	UPROPERTY(EditAnywhere, Category = "Character_Effect")
+		UAnimMontage* DeathAnim;
+	UPROPERTY(VisibleAnywhere)
+		FTimerHandle DeathTimer;
 
 
 	//// 加速事件代理,在有能量消耗的时候使用。
@@ -151,6 +179,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void AOE_Attack_TimeElapsed();
 
+	// 加血,动画调用
+	UFUNCTION(BlueprintCallable)
+		void Recovery();
+	void PlayAnimRecovery();
+	UPROPERTY(EditAnywhere, Category = "Character_Effect")
+		UAnimMontage* RecoveryAnim; // AOE_Attack
 protected:
 	//Basic Attack Func(No Weapon)
 	void Primary_Attack();

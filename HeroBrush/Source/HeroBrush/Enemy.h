@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -34,7 +34,17 @@ protected:
 	
 	void CheckTouchActor(AActor* OtherActor);
 	void CheckOffActor(AActor* OtherActor);
+	void PostDeadAnim();
+
+	UPROPERTY(VisibleAnywhere)
+		FTimerHandle DeathTimer;
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Info, meta = (AllowPrivateAccess = "true"))
 		class UWidgetComponent* StatusWidgetComponent;
+	// 受伤动画
+	UPROPERTY(EditAnywhere, Category = "Enemy_Effect")
+		UAnimMontage* HurtAnim;
+	// 死亡动画
+	UPROPERTY(EditAnywhere, Category = "Enemy_Effect")
+		UAnimMontage* DeathAnim;
 };

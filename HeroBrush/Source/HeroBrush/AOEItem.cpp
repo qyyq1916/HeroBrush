@@ -11,7 +11,7 @@ AAOEItem::AAOEItem()
 	PrimaryActorTick.bCanEverTick = true;
 	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("AOEComp"));
 	CollisionComp->InitSphereRadius(200.0f);
-	CollisionComp->SetRelativeScale3D(FVector(1.f, 1.f, 1.f));
+	/*CollisionComp->SetRelativeScale3D(FVector(1.f, 1.f, 1.f));*/
 	CollisionComp->SetCollisionProfileName("UI");
 
 	RootComponent = CollisionComp;
