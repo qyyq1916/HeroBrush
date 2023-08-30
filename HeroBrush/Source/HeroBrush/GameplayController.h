@@ -24,6 +24,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Utils")
 		void AddItemToInventoryByID(FName ID);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void ReloadInventory();
+
+	UFUNCTION(BlueprintCallable, Category = "Utils")
+		void CraftItem(FInventoryItem ItemA, FInventoryItem ItemB, AGameplayController* controller);
+
 protected:
 	void Interact();
 	virtual void SetupInputComponent() override;

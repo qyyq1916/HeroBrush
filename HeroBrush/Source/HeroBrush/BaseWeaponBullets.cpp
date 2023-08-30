@@ -45,10 +45,6 @@ ABaseWeaponBullets::ABaseWeaponBullets()
 	// 选择加载的粒子效果
 	EffectComp->SetTemplate(ParticleCompAsset.Object);
 
-	//Effect Component
-	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("EffectComp"));
-	EffectComp->SetupAttachment(CollisionComp);
-
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
 }
