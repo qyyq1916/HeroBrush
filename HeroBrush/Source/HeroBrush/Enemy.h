@@ -36,8 +36,7 @@ protected:
 	void CheckOffActor(AActor* OtherActor);
 	void PostDeadAnim();
 
-	UPROPERTY(VisibleAnywhere)
-		FTimerHandle DeathTimer;
+	FTimerHandle DeathTimer;
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Info, meta = (AllowPrivateAccess = "true"))
 		class UWidgetComponent* StatusWidgetComponent;

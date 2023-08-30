@@ -32,15 +32,16 @@ void AEnemy::BeginPlay()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (CurHealth <= 0)
+	/*if (CurHealth <= 0)
 	{
 		PlayAnimMontage(DeathAnim);
 		GetWorldTimerManager().SetTimer(DeathTimer, this, &AEnemy::PostDeadAnim, 1.0f);
-	}
+	}*/
 }
 
 void AEnemy::PostDeadAnim()
 {
+	GetWorld()->GetTimerManager().ClearTimer(DeathTimer);
 	Destroy();
 }
 

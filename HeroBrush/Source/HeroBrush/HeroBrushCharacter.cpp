@@ -414,7 +414,7 @@ void AHeroBrushCharacter::CheckForInteractables() {
 	GetActorEyesViewPoint(CameraLocation, CameraRotation);
 
 	FVector MuzzleOffset;
-	MuzzleOffset.Set(100.0f, 0.0f, 0.0f);
+	MuzzleOffset.Set(100.0f, 20.0f, 0.0f);
 
 	FVector StartTrace = CameraLocation; // 射线起始点
 	FVector EndTrace = (FTransform(CameraRotation).TransformVector(MuzzleOffset)) * 2.f + StartTrace; // 射线终止点。
@@ -424,12 +424,12 @@ void AHeroBrushCharacter::CheckForInteractables() {
 
 	AGameplayController* controller = Cast<AGameplayController>(GetController()); // 玩家控制器
 
-	TArray<AActor*> IgnoreActors;
+	/*TArray<AActor*> IgnoreActors;
 	bool bIsHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), StartTrace, EndTrace, TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::ForDuration, HitResult, true);
 	if (bIsHit)
 	{
 		UKismetSystemLibrary::PrintString(GetWorld(), HitResult.GetActor()->GetName());
-	}
+	}*/
 
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Visibility, QueryParams) && controller) {
 		//检查我们点击的项目是否是一个可交互的项目
