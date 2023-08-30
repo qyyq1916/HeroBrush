@@ -5,8 +5,5 @@
 
 AEnemyBulletsBase::AEnemyBulletsBase()
 {
-
-	DamageFrom = false; // true来自于角色，false来自于敌人
-	
-	BulletDamage = 5.0f;//基础子弹伤害
+	BulletDamage = -10.0f;//基础子弹伤害
 }

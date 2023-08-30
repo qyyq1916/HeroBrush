@@ -21,10 +21,7 @@ public:
 	// Sets default values for this actor's properties
 	AAOEItem();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
-		bool DamageFrom = true; // true来自于角色，false来自于敌人
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
-		int AOEInfo = 0; // 不同类型的伤害
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
 		float AOEDamage = -20.f;// 伤害的大小
 

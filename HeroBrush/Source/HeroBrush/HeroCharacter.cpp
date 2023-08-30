@@ -113,6 +113,11 @@ FRotator AHeroCharacter::GetAimRotation() {
 	return AimRotation;
 }
 
+void AHeroCharacter::ClearFunction()
+{
+	GetWorld()->GetTimerManager().ClearTimer(HealthTimer);
+	HealthDelegate.Unbind();
+}
 
 void AHeroCharacter::ChangeHealth(bool IsLong, int TimePeriod, float HealthRange) {
 
