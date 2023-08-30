@@ -38,3 +38,21 @@ void AGameplayController::SetupInputComponent()
 	InputComponent->BindAction("Use", IE_Pressed, this, &AGameplayController::Interact);
 }
 
+void AGameplayController::CraftItem(FInventoryItem ItemA, FInventoryItem ItemB, AGameplayController* controller)
+{
+	for (auto Craft : ItemB.CraftCombinations) {
+		
+		if (Craft.ComponentID == ItemA.ItemID) {
+			if (Craft.bDestroyItemA) {
+				Inventory.RemoveSingle(ItemA);
+			}
+			if (Craft.bDestroyItemB) {
+				Inventory.RemoveSingle(ItemB);
+			}
+			AddItemToInventoryByID(Craft.ProductID);
+
+			ReloadInventory();
+		}
+	}
+}
+
