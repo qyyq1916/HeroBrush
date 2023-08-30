@@ -45,6 +45,14 @@ void AFuckerCutter::EndPlay()
 void AFuckerCutter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (CurHealth <= 0) {
+		Death();
+	}
+}
+void AFuckerCutter::Death() {
+
+}
+void AFuckerCutter::PlayHurtAnime() {
 
 }
 void AFuckerCutter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) {
@@ -55,6 +63,7 @@ void AFuckerCutter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AFuckerCutter::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFuckerCutter::Look);
 		PlayerInputComponent->BindAction("Primary_Attack", IE_Pressed, this, &AFuckerCutter::Primary_Attack);
+		PlayerInputComponent->BindAction("RAbility", IE_Pressed, this, &AFuckerCutter::RAbility);
 		//PlayerInputComponent->BindAction("Burden_Attack", IE_Pressed, this, &AFuckerCutter::Burden_Attack);
 	}
 }
@@ -78,24 +87,28 @@ void AFuckerCutter::ChangeOnceEnergy(float EnergyRange) {
 void AFuckerCutter::Primary_Attack() {
 	if (CanDoAttack) {
 		if (AttackAnimSeq == 0) {
+			NowAttackDamage = BaseAttackDamage;//修正造成的伤害数值为普攻伤害数值
 			PlayAnimMontage(AttackAnim1);
 			CanDoAttack = false;
 			AttackAnimSeq++;
 			AttackAnimSeq = AttackAnimSeq % 4;
 		}
 		else if (AttackAnimSeq == 1) {
+			NowAttackDamage = BaseAttackDamage;
 			PlayAnimMontage(AttackAnim2);
 			CanDoAttack = false;
 			AttackAnimSeq++;
 			AttackAnimSeq = AttackAnimSeq % 4;
 		}
 		else if (AttackAnimSeq == 2) {
+			NowAttackDamage = BaseAttackDamage;
 			PlayAnimMontage(AttackAnim3);
 			CanDoAttack = false;
 			AttackAnimSeq++;
 			AttackAnimSeq = AttackAnimSeq % 4;
 		}
 		else if (AttackAnimSeq == 3) {
+			NowAttackDamage = BaseAttackDamage;
 			PlayAnimMontage(AttackAnim4);
 			CanDoAttack = false;
 			AttackAnimSeq++;
@@ -106,6 +119,10 @@ void AFuckerCutter::Primary_Attack() {
 }
 void AFuckerCutter::SetCanDoAttackTrue() {
 	CanDoAttack = true;
+}
+void AFuckerCutter::RAbility() {
+	NowAttackDamage = RAttackDamage;
+	PlayAnimMontage(RAbilityAnim);
 }
 void AFuckerCutter::PrimaryAttack_TimeElapsed()
 {
@@ -140,7 +157,7 @@ void AFuckerCutter::MontageWindowBegin_Delay()
 			if (HittingEnemy) {
 				if (!HittingEnemy_Array.Contains(HittingEnemy)) {
 					HittingEnemy_Array.AddUnique(HittingEnemy);
-					//HittingEnemy->受伤函数
+					HittingEnemy->ChangeHealth(false, -1, -NowAttackDamage);
 				}
 			}
 		}
