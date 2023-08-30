@@ -111,7 +111,10 @@ void AHeroBrushCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 		PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AHeroBrushCharacter::OnInteract);
 
 		PlayerInputComponent->BindAction("AOE_Attack", IE_Pressed, this, &AHeroBrushCharacter::AOE_Attack);
+
+		PlayerInputComponent->BindAction("ChangeQuickAttack", IE_Pressed, this, &AHeroBrushCharacter::ChangeQuickAttack);
 		
+		PlayerInputComponent->BindAction("PlayAnimRecovery", IE_Pressed, this, &AHeroBrushCharacter::PlayAnimRecovery);
 
 	}
 
@@ -185,6 +188,25 @@ void AHeroBrushCharacter::ChangeOnceEnergy(float EnergyRange) {
 
 //Basic Attack
 void AHeroBrushCharacter::Primary_Attack() {
+	if (Primary_Attack_CD && !isQuickAttack) {
+		Primary_Attack_CD = false;
+		PlayPrimaryAttackAnim();
+		GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack_CD, this, &AHeroBrushCharacter::ChangePrimary_Attack_CD, 0.5f);
+	}
+	else if (isQuickAttack) {
+		PlayPrimaryAttackAnim();
+		GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AHeroBrushCharacter::PrimaryAttack_TimeElapsed, 0.1f);
+	}
+		
+	// 非加速攻击在动画蓝图中。
+}
+void AHeroBrushCharacter::ChangePrimary_Attack_CD()
+{
+	Primary_Attack_CD = true;
+}
+
+void AHeroBrushCharacter::PlayPrimaryAttackAnim()
+{
 	if (AttackAnimSeq == 0) {
 		PlayAnimMontage(AttackAnim1);
 		HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
@@ -203,11 +225,7 @@ void AHeroBrushCharacter::Primary_Attack() {
 		AttackAnimSeq++;
 		AttackAnimSeq = AttackAnimSeq % 3;
 	}
-
-	//GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AHeroBrushCharacter::PrimaryAttack_TimeElapsed, 0.2f);
-	
 }
-
 // you can set shoot location and shoot speed
 void AHeroBrushCharacter::PrimaryAttack_TimeElapsed() {
 
@@ -222,10 +240,18 @@ void AHeroBrushCharacter::PrimaryAttack_TimeElapsed() {
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams); // 使用已有的蓝图加载，在蓝图中设置
 }
 
+
+
 void AHeroBrushCharacter::Burden_Attack()
 {
-	PlayAnimMontage(BurdenAnim);
-	HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	if (CurEnergy >= 5.0f) {
+		if (!isQuickAttack)
+			PlayAnimMontage(BurdenAnim);
+		else
+			PlayAnimMontage(BurdenFastAnim);
+		HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	}
+	
 
 	//GetWorldTimerManager().SetTimer(TimerHandle_Burden_Attack, this, &AHeroBrushCharacter::Burden_Attack_TimeElapsed, 1.0f);
 }
@@ -240,7 +266,10 @@ void AHeroBrushCharacter::Burden_Attack_TimeElapsed() {
 	SpawnParams.Instigator = this;
 
 	GetWorld()->SpawnActor<AActor>(ProjectileClass_Burden, SpawnTM, SpawnParams); // 使用已有的蓝图加载，在蓝图中设置
+	ChangeEnergy(false, -1, -5.0f);
 }
+
+
 void AHeroBrushCharacter::Flash_Attack()
 {
 	if (isFlashActive)
@@ -252,10 +281,15 @@ void AHeroBrushCharacter::Flash_Attack()
 
 		FromLocation = PresentLocation;
 		AimLocation = NextLocation;
-		GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AHeroBrushCharacter::Flash_TimeElapsed, 0.2f);
 
-
-		this->SetActorLocation(NextLocation, false);
+		
+		if (CurEnergy >= 5.0f) {
+			GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AHeroBrushCharacter::Flash_TimeElapsed, 0.2f);
+			PlayAnimMontage(Flash_In_Anim);
+			this->SetActorLocation(NextLocation, false);
+			PlayAnimMontage(Flash_Out_Anim);
+		}
+		
 	}
 }
 
@@ -270,8 +304,43 @@ void AHeroBrushCharacter::Flash_TimeElapsed() {
 	SpawnParams.Instigator = this;
 
 	GetWorld()->SpawnActor<AActor>(ProjectileClass_Flash, SpawnTM, SpawnParams); // 使用已有的蓝图加载，在蓝图中设置
+	ChangeEnergy(false, -1, -5.0f);
 }
 
+
+void AHeroBrushCharacter::AOE_Attack()
+{
+	if (CurEnergy >= 30)
+		PlayAnimMontage(AOEAnim);
+}
+void AHeroBrushCharacter::AOE_Attack_TimeElapsed()
+{
+	AAOEItem* tempAoe = GetWorld()->SpawnActor<AAOEItem>(GetActorLocation(), GetActorRotation());
+	//UE_LOG(LogTemp, Warning, TEXT("AAOEItemLOC_During:%f,%f,%f"), tempAoe->GetActorLocation().X, tempAoe->GetActorLocation().Y, tempAoe->GetActorLocation().Z);
+	ChangeEnergy(false, -1, -30.0f);
+}
+
+void AHeroBrushCharacter::ChangeQuickAttack()
+{
+	if (isQuickAttack) isQuickAttack = false;
+	else isQuickAttack = true;
+}
+
+bool AHeroBrushCharacter::GetIsQucikAttack()
+{
+	return isQuickAttack;
+}
+
+
+void AHeroBrushCharacter::PlayAnimRecovery()
+{
+	float timeperiod = PlayAnimMontage(RecoveryAnim);
+	
+}
+void AHeroBrushCharacter::Recovery()
+{
+	ChangeHealth(false, -1, 30.0f);
+}
 void AHeroBrushCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -281,7 +350,7 @@ void AHeroBrushCharacter::Tick(float DeltaTime)
 	}
 	if (Flash_Attack_Time <= 0) {
 		isFlashActive = true;
-		Flash_Attack_Time = 180;
+		Flash_Attack_Time = 120;
 	}
 	
 	CheckForInteractables();
@@ -313,8 +382,15 @@ void AHeroBrushCharacter::CheckTouchActor(AActor* OtherActor)
 	// 如果是来自敌人的bullets
 	if (actor != nullptr && !actor->DamageFrom) {
 		if (actor->BulletsInfo == 0) {
-			ChangeHealth(false, -1, -5.0f); // 第一类的掉血
+			ChangeHealth(false, -1, actor->BulletDamage); // 第一类的掉血
+			PlayAnimMontage(HurtAnim);
 		} 
+		if (CurHealth > 0)
+			PlayAnimMontage(HurtAnim);
+		else {
+			PlayAnimMontage(DeathAnim);
+			
+		}
 	}
 
 	// aoe的来源
@@ -327,15 +403,6 @@ void AHeroBrushCharacter::CheckTouchActor(AActor* OtherActor)
 		
 }
 
-void AHeroBrushCharacter::AOE_Attack()
-{
-	PlayAnimMontage(AOEAnim);	
-}
-void AHeroBrushCharacter::AOE_Attack_TimeElapsed()
-{
-	AAOEItem* tempAoe = GetWorld()->SpawnActor<AAOEItem>(GetActorLocation(), GetActorRotation());
-	//UE_LOG(LogTemp, Warning, TEXT("AAOEItemLOC_During:%f,%f,%f"), tempAoe->GetActorLocation().X, tempAoe->GetActorLocation().Y, tempAoe->GetActorLocation().Z);
-}
 
 
 void AHeroBrushCharacter::CheckForInteractables() {

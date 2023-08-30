@@ -32,7 +32,16 @@ void AEnemy::BeginPlay()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (CurHealth == 0) Destroy();
+	if (CurHealth <= 0)
+	{
+		PlayAnimMontage(DeathAnim);
+		GetWorldTimerManager().SetTimer(DeathTimer, this, &AEnemy::PostDeadAnim, 1.0f);
+	}
+}
+
+void AEnemy::PostDeadAnim()
+{
+	Destroy();
 }
 
 // Called to bind functionality to input
@@ -52,10 +61,17 @@ void AEnemy::CheckTouchActor(AActor* OtherActor)
 	// 如果是来自英雄的bullets
 	if (actor != nullptr && actor->DamageFrom) {
 		if (actor->BulletsInfo == 0) {
-			ChangeHealth(false, -1, -5.0f); // 第一类的掉血
+			ChangeHealth(false, -1, actor->BulletDamage); // 第一类的掉血
+			
 		}
 		else if (actor->BulletsInfo == 1) {
-			ChangeHealth(false, -1, -20.0f);
+			ChangeHealth(false, -1, actor->BulletDamage);
+		}
+		if (CurHealth > 0 )
+			PlayAnimMontage(HurtAnim);
+		else {
+			PlayAnimMontage(DeathAnim);
+			GetWorldTimerManager().SetTimer(DeathTimer, this, &AEnemy::PostDeadAnim, 0.5f);
 		}
 	}
 
@@ -65,7 +81,9 @@ void AEnemy::CheckTouchActor(AActor* OtherActor)
 		if (actor1->AOEInfo == 0) {
 
 			ChangeHealth(true, 1, actor1->AOEDamage);
+
 		}
+		PlayAnimMontage(DeathAnim);
 	}
 }
 void AEnemy::NotifyActorEndOverlap(AActor* OtherActor)
