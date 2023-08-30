@@ -44,7 +44,5 @@ public:
 	// 受伤动画
 	UPROPERTY(EditAnywhere, Category = "Enemy_Effect")
 		UAnimMontage* HurtAnim;
-	// 死亡动画
-	UPROPERTY(EditAnywhere, Category = "Enemy_Effect")
-		UAnimMontage* DeathAnim;
+	
 };

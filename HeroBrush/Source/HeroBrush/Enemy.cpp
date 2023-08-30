@@ -32,15 +32,11 @@ void AEnemy::BeginPlay()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (CurHealth <= 0)
-	{
-		PlayAnimMontage(DeathAnim);
-		GetWorldTimerManager().SetTimer(DeathTimer, this, &AEnemy::PostDeadAnim, 1.0f);
-	}
 }
 
 void AEnemy::PostDeadAnim()
 {
+	GetWorld()->GetTimerManager().ClearTimer(DeathTimer);
 	Destroy();
 }
 
@@ -70,8 +66,7 @@ void AEnemy::CheckTouchActor(AActor* OtherActor)
 		if (CurHealth > 0 )
 			PlayAnimMontage(HurtAnim);
 		else {
-			PlayAnimMontage(DeathAnim);
-			GetWorldTimerManager().SetTimer(DeathTimer, this, &AEnemy::PostDeadAnim, 0.5f);
+			GetWorldTimerManager().SetTimer(DeathTimer, this, &AEnemy::PostDeadAnim, 1.0f);
 		}
 	}
 
@@ -79,11 +74,13 @@ void AEnemy::CheckTouchActor(AActor* OtherActor)
 	auto actor1 = Cast<AAOEItem>(OtherActor);
 	if (actor1 != nullptr && actor1->DamageFrom) {
 		if (actor1->AOEInfo == 0) {
-
 			ChangeHealth(true, 1, actor1->AOEDamage);
-
 		}
-		PlayAnimMontage(DeathAnim);
+		if (CurHealth > 0)
+			PlayAnimMontage(HurtAnim);
+		else {
+			GetWorldTimerManager().SetTimer(DeathTimer, this, &AEnemy::PostDeadAnim, 1.0f);
+		}
 	}
 }
 void AEnemy::NotifyActorEndOverlap(AActor* OtherActor)

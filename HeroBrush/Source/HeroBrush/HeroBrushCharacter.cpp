@@ -116,6 +116,8 @@ void AHeroBrushCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 		
 		PlayerInputComponent->BindAction("PlayAnimRecovery", IE_Pressed, this, &AHeroBrushCharacter::PlayAnimRecovery);
 
+		PlayerInputComponent->BindAction("test", IE_Pressed, this, &AHeroBrushCharacter::test);
+
 	}
 
 }
