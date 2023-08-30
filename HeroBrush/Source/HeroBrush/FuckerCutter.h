@@ -54,6 +54,12 @@ protected:
 		UAnimMontage* AttackAnim3;
 	UPROPERTY(EditAnywhere, Category = "Primary_Attack")
 		UAnimMontage* AttackAnim4;
+	UPROPERTY(EditAnywhere, Category = "Skill")
+		UAnimMontage* RAbilityAnim;
+	UPROPERTY(EditAnywhere, Category = "Skill")
+		UAnimMontage* QAbilityAnim;
+	UPROPERTY(EditAnywhere, Category = "Death")
+		UAnimMontage* DeathAnim;
 	UPROPERTY(VisibleAnywhere)
 		FTimerHandle TimerHandle_PrimaryAttack;
 	int AttackAnimSeq = 0;
@@ -65,10 +71,33 @@ protected:
 
 	void Primary_Attack();
 
+
 	void PrimaryAttack_TimeElapsed();
 	UPROPERTY(BlueprintReadOnly, Category = "Man")
 		TArray<AEnemy*>HittingEnemy_Array;
 	AEnemy* HittingEnemy = nullptr;
 	void GetTrancePointsLocation();//获取插槽位置信息
 	FTimerHandle Attacktest;
+
+	void RAbility();
+	bool CanDoR=true;
+	void SetCanDoRTrue();
+	float RSkillCD=8.f;
+	FTimerHandle RSkillReset;
+	
+	void QAbility();
+	bool CanDoQ = true;
+	void SetCanDoQTrue();
+	float QSkillCD = 12.f;
+	FTimerHandle QSkillReset;
+	void SetAttackSpeedNormal();
+	FTimerHandle QSkillLast;
+
+
+	float NowAttackDamage = 20.f;
+	float BaseAttackDamage=20.f;
+	float RAttackDamage=100.f;
+
+	void Death();
+	void PlayHurtAnime();
 };

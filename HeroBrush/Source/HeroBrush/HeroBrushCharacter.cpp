@@ -116,8 +116,6 @@ void AHeroBrushCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 		
 		PlayerInputComponent->BindAction("PlayAnimRecovery", IE_Pressed, this, &AHeroBrushCharacter::PlayAnimRecovery);
 
-		PlayerInputComponent->BindAction("test", IE_Pressed, this, &AHeroBrushCharacter::test);
-
 	}
 
 }
@@ -306,7 +304,7 @@ void AHeroBrushCharacter::Flash_TimeElapsed() {
 	SpawnParams.Instigator = this;
 
 	GetWorld()->SpawnActor<AActor>(ProjectileClass_Flash, SpawnTM, SpawnParams); // 使用已有的蓝图加载，在蓝图中设置
-	ChangeEnergy(false, -1, -5.0f);
+	ChangeEnergy(false, -1, -10.0f);
 }
 
 
@@ -317,7 +315,12 @@ void AHeroBrushCharacter::AOE_Attack()
 }
 void AHeroBrushCharacter::AOE_Attack_TimeElapsed()
 {
-	AAOEItem* tempAoe = GetWorld()->SpawnActor<AAOEItem>(GetActorLocation(), GetActorRotation());
+	const FTransform SpawnTM = FTransform(GetActorRotation(), GetActorLocation());
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
+	GetWorld()->SpawnActor<AActor>(ProjectileClass_AOE, SpawnTM, SpawnParams); // 使用已有的蓝图加载，在蓝图中设置
+	
 	//UE_LOG(LogTemp, Warning, TEXT("AAOEItemLOC_During:%f,%f,%f"), tempAoe->GetActorLocation().X, tempAoe->GetActorLocation().Y, tempAoe->GetActorLocation().Z);
 	ChangeEnergy(false, -1, -30.0f);
 }
@@ -376,34 +379,20 @@ void AHeroBrushCharacter::TurnOffSpeed()
 
 void AHeroBrushCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	CheckTouchActor(OtherActor);
-}
-void AHeroBrushCharacter::CheckTouchActor(AActor* OtherActor)
-{
-	auto actor = Cast<ABaseWeaponBullets>(OtherActor);
-	// 如果是来自敌人的bullets
-	if (actor != nullptr && !actor->DamageFrom) {
-		if (actor->BulletsInfo == 0) {
-			ChangeHealth(false, -1, actor->BulletDamage); // 第一类的掉血
-			PlayAnimMontage(HurtAnim);
-		} 
-		if (CurHealth > 0)
-			PlayAnimMontage(HurtAnim);
-		else {
-			PlayAnimMontage(DeathAnim);
-			
-		}
+	//CheckTouchActor(OtherActor);
+	if (CurHealth <= 0) {
+		PlayAnimMontage(DeathAnim);
 	}
-
-	// aoe的来源
-	auto actor1 = Cast<AAOEItem>(OtherActor);
-	if(actor1 != nullptr && !actor1->DamageFrom) {
-		if (actor1->AOEInfo == 0) {
-			ChangeHealth(false, -1, actor1->AOEDamage);
-		}
-	}
-		
 }
+//void AHeroBrushCharacter::CheckTouchActor(AActor* OtherActor)
+//{
+//	// 留给后面需要接触的时候使用
+//	auto actor1 = Cast<AAOEItem>(OtherActor);
+//	if(actor1 != nullptr) {
+//		
+//	}
+//		
+//}
 
 
 

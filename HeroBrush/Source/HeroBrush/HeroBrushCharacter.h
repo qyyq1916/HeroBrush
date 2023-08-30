@@ -36,10 +36,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroCamera");
 		class UCameraComponent* CameraThird;
 	
-	// delegate
-	FTimerDelegate HealthDelegate;
-	FTimerDelegate EnergyDelegate;
-	FTimerDelegate SpeedUpDelegate;
 
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
@@ -144,7 +140,10 @@ protected:
 
 	// AOE
 	UPROPERTY(EditAnywhere, Category = "AOE_Attack")
+		TSubclassOf<AActor> ProjectileClass_AOE;
+	UPROPERTY(EditAnywhere, Category = "AOE_Attack")
 		UAnimMontage* AOEAnim; // AOE_Attack
+
 
 	// 受伤动画
 	UPROPERTY(EditAnywhere, Category = "Character_Effect")
@@ -155,11 +154,6 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 		FTimerHandle DeathTimer;
 
-
-	//// 加速事件代理,在有能量消耗的时候使用。
-	//FTimerDelegate SpeedUpDelegate;
-
-	//The Weapon Character Armed
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 		class AWeapon* EquiqedWeapon;
@@ -199,13 +193,12 @@ protected:
 
 	void TurnOffSpeed();
 
-	virtual void NotifyActorBeginOverlap(AActor* OtherActor);
-
-	void CheckTouchActor(AActor* OtherActor);
-
 	void CheckForInteractables();
 
 	void AOE_Attack();
+
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor);
+	//void CheckTouchActor(AActor* OtherActor);
 };
 
 //定义数据类型

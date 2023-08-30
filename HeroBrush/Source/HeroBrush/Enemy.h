@@ -28,13 +28,7 @@ protected:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	virtual void NotifyActorBeginOverlap(AActor* OtherActor);
-	virtual void NotifyActorEndOverlap(AActor* OtherActor);
-	
-	void CheckTouchActor(AActor* OtherActor);
-	void CheckOffActor(AActor* OtherActor);
-	void PostDeadAnim();
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor); // 暂时加入到这里测试，后续死亡动画需要在行为树中
 
 	FTimerHandle DeathTimer;
 public:

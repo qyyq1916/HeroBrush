@@ -36,7 +36,9 @@ public:
 		float TotalHealth = 100.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
 		float CurHealth = 100.0f;
-	void ChangeHealth(bool IsLong, int TimePeriod, float HealthRange);  // 检测如果是长期加血，那么使用的是下面的状态来决定是否停止加血。
+	UFUNCTION(BlueprintCallable)
+		void ChangeHealth(bool IsLong, int TimePeriod, float HealthRange);  // 检测如果是长期加血，那么使用的是下面的状态来决定是否停止加血。
+	
 	void ChangeOnceHealth(float HealthRange); // 直接加这么多。
 		
 public:
@@ -59,6 +61,9 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+	//UPROPERTY(EditAnywhere, Category = "Hurt")
+	//	UAnimMontage* CharacterHurtAnim;
+	//int BaTiNumber=5;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -68,4 +73,6 @@ public:
 
 	FTimerDelegate HealthDelegate;
 	FTimerHandle HealthTimer;
+	UFUNCTION(BlueprintCallable)
+		void ClearFunction();
 };

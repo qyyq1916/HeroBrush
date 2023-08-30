@@ -76,14 +76,11 @@ void AHeroBrushCharacter::PrimaryAttack_TimeElapsed() {
 
 
 #### character的伤害
-我们将原本character中的health系统放到基类中，敌人和自身都需要health系统，在继承之后重新设置。
+修改了伤害的作用，全部将伤害做到子弹中，在蓝图中的修改了伤害的判定来源。也就是远程的伤害是子弹获取到的。而aoe也来进行判定。而连续的判定依旧在changehealth中。
+但是在蓝图中进行调用
 
-当接触到bullets之后NotifyActorBeginOverlap，调用CheckTouchActor，检测接触到的是来自于谁的什么类型的子弹，使用接口changeHealth,控制变化血量的长短时间和血量（目前没有加入长时间的具体代码）。后续可以添加别的效果。
-
-销毁由子弹自动销毁不需要角色控制
 #### 血量显示
 角色的widget，在level中显示，这个Status中获取到角色的生命和能量信息，实时更新。如果有血量变化，在角色中直接改变原本的值即可。后续可以添加角色具体的血量值。
-
 
 #### AOE技能设计
 粒子效果的加入，在动作的蒙太奇中加入，同时可以加入设置notify事件，然后在动画蓝图中调用这个事件发生的时候，进行函数的调用。使其生成伤害判定范围。
@@ -120,31 +117,4 @@ void AHeroBrushCharacter::AOE_Attack_TimeElapsed()
 aoe的特效一律加载到montage中。
 
 ##### 连续的伤害
-连续的伤害粒子，写在enemy中。
-ChangeHealth(true, 1, actor1->AOEDamage);
-```
-if (IsLong) {
-		HealthDelegate.BindUObject(this, &AHeroCharacter::ChangeOnceHealth, HealthRange); // 绑定带参数HealthRange的这个函数和HealthDelegate.
-		GetWorld()->GetTimerManager().SetTimer(HealthTimer, HealthDelegate, TimePeriod, true, -1); // 循环调用每TimePeriod使用一次，一直循环
-		// 什么时候离开，应该在离开这个邻域之后停止掉血，这个什么时候停止写在我们的子类里面
-	}
-```
-在函数中离开aoe的范围结束这个timer和绑定
-```
-void AEnemy::NotifyActorEndOverlap(AActor* OtherActor)
-{
-	CheckOffActor(OtherActor);
-}
-void AEnemy::CheckOffActor(AActor* OtherActor)
-{
-	// aoe的来源
-	auto actor1 = Cast<AAOEItem>(OtherActor);
-	if (actor1 != nullptr && actor1->DamageFrom) {
-		if (actor1->AOEInfo == 0) {
-			GetWorld()->GetTimerManager().ClearTimer(HealthTimer);
-			HealthDelegate.Unbind();
-		}
-	}
-	
-}
-```
+连续的伤害aoe类型，写在BIG_AOE_Player1的蓝图中。
