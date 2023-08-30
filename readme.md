@@ -4,7 +4,7 @@ HeroCharacter为基类，具有基本的bpthirdperson的所有的特性。herobr
 
 hero的基类中实现了一个方法，设置发射的location和发射目标的location，通过GetAimRotation，计算得到两者之间的rotation。在后续实现远程射击中有帮助。
 
-
+### 有关同步资产，对于包内部的有做修改的内容，我们把所有的修改的文件传到共享盘的update_to_latest文件夹下！！
 
 ### 子弹系统
 子弹系统由基类BaseWeaponBullets生成，默认的碰撞效果是Projectile,如果在preset的collisioni中没有设置，可以重新设置这个Projectile。
@@ -85,3 +85,66 @@ void AHeroBrushCharacter::PrimaryAttack_TimeElapsed() {
 角色的widget，在level中显示，这个Status中获取到角色的生命和能量信息，实时更新。如果有血量变化，在角色中直接改变原本的值即可。后续可以添加角色具体的血量值。
 
 
+#### AOE技能设计
+粒子效果的加入，在动作的蒙太奇中加入，同时可以加入设置notify事件，然后在动画蓝图中调用这个事件发生的时候，进行函数的调用。使其生成伤害判定范围。
+
+效果是动作自带的，而伤害判定范围是生成的。
+
+我们定义AOEitem来创建一个领域，默认为400radius的几乎完全overlap的collision，comp。
+
+定义伤害事件，首先我们还是一样，使用一个bool来判断伤害来源，使用int类型来判断AOE的伤害是什么，伤害多少。
+
+当使用这个AOE伤害的时候，可以仿写下面的代码：
+```cpp
+void AHeroBrushCharacter::AOE_Attack()
+{
+	PlayAnimMontage(AOEAnim);	
+}
+void AHeroBrushCharacter::AOE_Attack_TimeElapsed()
+{
+	AAOEItem* tempAoe = GetWorld()->SpawnActor<AAOEItem>(GetActorLocation(), GetActorRotation());
+}
+```
+直接在这个角色的位置生成这个aoe的范围。当然后面可以做成一个继承后的蓝图类，在代码中使用subclass，选中生成。
+
+伤害判定：
+```cpp
+// aoe的来源
+	auto actor1 = Cast<AAOEItem>(OtherActor);
+	if (actor1 != nullptr && actor1->DamageFrom) {
+		if (actor1->AOEInfo == 0) {
+			ChangeHealth(false, -1, actor1->AOEDamage);
+		}
+	}
+```
+aoe的特效一律加载到montage中。
+
+##### 连续的伤害
+连续的伤害粒子，写在enemy中。
+ChangeHealth(true, 1, actor1->AOEDamage);
+```
+if (IsLong) {
+		HealthDelegate.BindUObject(this, &AHeroCharacter::ChangeOnceHealth, HealthRange); // 绑定带参数HealthRange的这个函数和HealthDelegate.
+		GetWorld()->GetTimerManager().SetTimer(HealthTimer, HealthDelegate, TimePeriod, true, -1); // 循环调用每TimePeriod使用一次，一直循环
+		// 什么时候离开，应该在离开这个邻域之后停止掉血，这个什么时候停止写在我们的子类里面
+	}
+```
+在函数中离开aoe的范围结束这个timer和绑定
+```
+void AEnemy::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	CheckOffActor(OtherActor);
+}
+void AEnemy::CheckOffActor(AActor* OtherActor)
+{
+	// aoe的来源
+	auto actor1 = Cast<AAOEItem>(OtherActor);
+	if (actor1 != nullptr && actor1->DamageFrom) {
+		if (actor1->AOEInfo == 0) {
+			GetWorld()->GetTimerManager().ClearTimer(HealthTimer);
+			HealthDelegate.Unbind();
+		}
+	}
+	
+}
+```
