@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "HeroCharacter.h"
+#include "EnemyWeapons.h"
 #include "Enemy.generated.h"
 
 /**
@@ -38,5 +39,6 @@ public:
 	// 受伤动画
 	UPROPERTY(EditAnywhere, Category = "Enemy_Effect")
 		UAnimMontage* HurtAnim;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemyknife")
+		AEnemyWeapons* EnemyKnife=nullptr;
 };

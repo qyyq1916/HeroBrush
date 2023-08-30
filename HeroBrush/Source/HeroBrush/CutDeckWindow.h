@@ -2,6 +2,7 @@
 
 #pragma once
 #include "FuckerCutter.h"
+#include "Enemy.h"
 #include "CoreMinimal.h"
 #include "AnimNotifies/AnimNotify_PlayMontageNotify.h"
 #include "CutDeckWindow.generated.h"
@@ -16,7 +17,7 @@ class HEROBRUSH_API UCutDeckWindow : public UAnimNotify_PlayMontageNotifyWindow
 	
 public:
 	AFuckerCutter* FuckerCutter = nullptr;
-
+	AEnemy* ThisEnemy = nullptr;
 	virtual void BranchingPointNotifyBegin(FBranchingPointNotifyPayload& BranchingPointPayload) override;
 	virtual void BranchingPointNotifyEnd(FBranchingPointNotifyPayload& BranchingPointPayload) override;
 };

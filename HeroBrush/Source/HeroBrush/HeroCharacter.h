@@ -61,6 +61,9 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+	//UPROPERTY(EditAnywhere, Category = "Hurt")
+	//	UAnimMontage* CharacterHurtAnim;
+	//int BaTiNumber=5;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
