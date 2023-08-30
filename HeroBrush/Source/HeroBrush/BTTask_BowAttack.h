@@ -23,6 +23,7 @@ class HEROBRUSH_API UBTTask_BowAttack : public UBTTaskNode
 		TSubclassOf<AActor> ProjectileClass;
 	UPROPERTY(EditAnywhere, Category = "AI_Attack")
 		UAnimMontage* AttackAnim1;
+
 	UPROPERTY(EditAnywhere, Category = "AI_Attack")
 		FName InSocketName;
 	
