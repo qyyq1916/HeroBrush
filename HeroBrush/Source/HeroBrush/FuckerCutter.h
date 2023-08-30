@@ -80,6 +80,20 @@ protected:
 	FTimerHandle Attacktest;
 
 	void RAbility();
+	bool CanDoR=true;
+	void SetCanDoRTrue();
+	float RSkillCD=8.f;
+	FTimerHandle RSkillReset;
+	
+	void QAbility();
+	bool CanDoQ = true;
+	void SetCanDoQTrue();
+	float QSkillCD = 12.f;
+	FTimerHandle QSkillReset;
+	void SetAttackSpeedNormal();
+	FTimerHandle QSkillLast;
+
+
 	float NowAttackDamage = 20.f;
 	float BaseAttackDamage=20.f;
 	float RAttackDamage=100.f;

@@ -137,6 +137,13 @@ void AHeroCharacter::ChangeHealth(bool IsLong, int TimePeriod, float HealthRange
 
 }
 void AHeroCharacter::ChangeOnceHealth(float HealthRange) {
+	/*if (HealthRange < 0) {
+		BaTiNumber--;
+		if (BaTiNumber ==0) {
+			BaTiNumber = 5;
+			PlayAnimMontage(CharacterHurtAnim);
+		}
+	}*/
 	if (CurHealth + HealthRange < TotalHealth && CurHealth + HealthRange > 0)
 		CurHealth += HealthRange;
 	else if (CurHealth + HealthRange >= TotalHealth)
