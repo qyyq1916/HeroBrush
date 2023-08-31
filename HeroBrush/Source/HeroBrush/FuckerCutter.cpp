@@ -45,16 +45,18 @@ void AFuckerCutter::EndPlay()
 void AFuckerCutter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (CurHealth <= 0) {
-		Death();
+	if (IsDead == false) {
+		if (CurHealth <= 0) {
+			Death();
+		}
 	}
+	
 }
 void AFuckerCutter::Death() {
+	IsDead = true;
 	PlayAnimMontage(DeathAnim);
 }
-void AFuckerCutter::PlayHurtAnime() {
 
-}
 void AFuckerCutter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
@@ -65,6 +67,7 @@ void AFuckerCutter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 		PlayerInputComponent->BindAction("Primary_Attack", IE_Pressed, this, &AFuckerCutter::Primary_Attack);
 		PlayerInputComponent->BindAction("RAbility", IE_Pressed, this, &AFuckerCutter::RAbility);
 		PlayerInputComponent->BindAction("QAbility", IE_Pressed, this, &AFuckerCutter::QAbility);
+		PlayerInputComponent->BindAction("CutterFlash", IE_Pressed, this, &AFuckerCutter::CutterFlash);
 		//PlayerInputComponent->BindAction("Burden_Attack", IE_Pressed, this, &AFuckerCutter::Burden_Attack);
 	}
 }
@@ -154,7 +157,26 @@ void AFuckerCutter::SetCanDoQTrue()
 void AFuckerCutter::SetAttackSpeedNormal() {
 	AttackSpeed = 1.f;
 }
+void AFuckerCutter::PlayHurtAnime() {
 
+}
+void AFuckerCutter::CutterFlash()
+{
+	if (CanDoFlash) {
+		CanDoFlash = false;
+		GetCharacterMovement()->MaxWalkSpeed = 8000.0f;
+		GetWorldTimerManager().SetTimer(FlashReset, this, &AFuckerCutter::SetCanDoFlashTrue, FlashCD, false);//cd4秒
+		GetWorldTimerManager().SetTimer(FlashLast, this, &AFuckerCutter::SetSpeedNormal, 0.5, false);//加速0.2秒
+	}
+}
+void AFuckerCutter::SetCanDoFlashTrue()
+{
+	CanDoFlash = true;
+}
+void AFuckerCutter::SetSpeedNormal()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+}
 
 void AFuckerCutter::PrimaryAttack_TimeElapsed()
 {

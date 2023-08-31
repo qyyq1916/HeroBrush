@@ -99,5 +99,14 @@ protected:
 	float RAttackDamage=100.f;
 
 	void Death();
+	bool IsDead = false;
 	void PlayHurtAnime();
+
+	void CutterFlash();
+	bool CanDoFlash = true;
+	void SetCanDoFlashTrue();
+	float FlashCD = 2.f;
+	FTimerHandle FlashReset;
+	void SetSpeedNormal();
+	FTimerHandle FlashLast;
 };

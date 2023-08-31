@@ -137,17 +137,26 @@ void AHeroCharacter::ChangeHealth(bool IsLong, int TimePeriod, float HealthRange
 
 }
 void AHeroCharacter::ChangeOnceHealth(float HealthRange) {
-	/*if (HealthRange < 0) {
-		BaTiNumber--;
-		if (BaTiNumber ==0) {
-			BaTiNumber = 5;
+	if (HealthRange < 0) {
+		if (IsEnemy) {
 			PlayAnimMontage(CharacterHurtAnim);
 		}
-	}*/
+		else {
+			BaTiNumber--;
+			if (BaTiNumber == 0) {
+				BaTiNumber = 8;
+				PlayAnimMontage(CharacterHurtAnim);
+			}
+		}
+		
+	}
 	if (CurHealth + HealthRange < TotalHealth && CurHealth + HealthRange > 0)
 		CurHealth += HealthRange;
 	else if (CurHealth + HealthRange >= TotalHealth)
 		CurHealth = TotalHealth;
 	else if (CurHealth + HealthRange <= 0)
 		CurHealth = 0.0f;
+}
+void AHeroCharacter::SetIsEnemyTrue() {
+	IsEnemy = true;
 }
