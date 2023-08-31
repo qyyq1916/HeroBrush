@@ -40,4 +40,23 @@ public:
 		UAnimMontage* HurtAnim;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemyknife")
 		AEnemyWeapons* EnemyKnife=nullptr;
+	
+public:
+	void SetTarget(AActor* NewTarget);
+
+protected:
+	AActor* Target;
+
+public:
+	UFUNCTION(BlueprintCallable)
+		void RemoteAttack();
+	UFUNCTION(BlueprintCallable)
+		void AoeAttack();
+
+public:
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<AActor> ProjectileClass;
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<AActor> AOEItem;
+
 };

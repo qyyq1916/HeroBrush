@@ -14,8 +14,5 @@ class HEROBRUSH_API ABoss : public AEnemy
 {
 	GENERATED_BODY()
 
-public:
-
-
 
 }; 

@@ -4,6 +4,8 @@
 #include "BTTask_BowAttack.h"
 #include "AIController.h"
 #include "HeroCharacter.h"
+#include "Boss.h"
+#include "Enemy.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -15,7 +17,7 @@ EBTNodeResult::Type UBTTask_BowAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 	
 	if (ensure(MyController))
 	{
-		ACharacter* MyPawn = Cast<ACharacter>(MyController->GetPawn());
+		AEnemy* MyPawn = Cast<AEnemy>(MyController->GetPawn());
 		
 		if (MyPawn == nullptr)
 		{
@@ -29,21 +31,16 @@ EBTNodeResult::Type UBTTask_BowAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 			return EBTNodeResult::Failed;
 		}
 
-		FVector BowLocation = MyPawn->GetMesh()->GetSocketLocation("Muzzle_01");
+		MyPawn->SetTarget(TargetActor);
+
+		if (MyPawn->GetCurrentMontage() != AttackAnim1)
+		{
+			MyPawn->PlayAnimMontage(AttackAnim1);
+		}
+
 		
-		FVector Direction = TargetActor->GetActorLocation() - BowLocation;
-
-		FRotator BowRotation = Direction.Rotation();
-
-		FActorSpawnParameters params;
-
-		params.Instigator = MyPawn;
-		params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		
-		ensure(ProjectileClass);
-		MyPawn->PlayAnimMontage(AttackAnim1);
-		AActor* NewProj = GetWorld()->SpawnActor<AActor>(ProjectileClass, BowLocation, BowRotation);
-		return NewProj ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
+		//return NewProj ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
+		return EBTNodeResult::Succeeded;
 	}
 
 	return EBTNodeResult::Failed;

@@ -43,3 +43,46 @@ void AEnemy::NotifyActorBeginOverlap(AActor* OtherActor)
 		Destroy();
 	}
 }
+
+void AEnemy::SetTarget(AActor* NewTarget)
+{
+	if (NewTarget)
+	{
+		Target = NewTarget;
+	}
+}
+
+void AEnemy::RemoteAttack()
+{
+	FVector BowLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+
+	FVector Direction = Target->GetActorLocation() - BowLocation;
+
+	FRotator BowRotation = Direction.Rotation();
+
+	FActorSpawnParameters params;
+
+	params.Instigator = this;
+	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	ensure(ProjectileClass);
+
+	GetWorld()->SpawnActor<AActor>(ProjectileClass, BowLocation, BowRotation);
+}
+
+void AEnemy::AoeAttack()
+{
+	FVector BowLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+
+	FVector Direction = Target->GetActorLocation() - BowLocation;
+
+	FRotator BowRotation = Direction.Rotation();
+
+	FActorSpawnParameters params;
+
+	params.Instigator = this;
+	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	ensure(AOEItem);
+	GetWorld()->SpawnActor<AActor>(AOEItem, BowLocation, BowRotation);
+}
