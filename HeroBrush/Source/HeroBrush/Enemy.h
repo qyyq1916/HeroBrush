@@ -31,8 +31,7 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor); // 暂时加入到这里测试，后续死亡动画需要在行为树中
 
-	UPROPERTY(VisibleAnywhere)
-		FTimerHandle DeathTimer;
+	FTimerHandle DeathTimer;
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Info, meta = (AllowPrivateAccess = "true"))
 		class UWidgetComponent* StatusWidgetComponent;
