@@ -223,6 +223,7 @@ public:
 		Action = FText::FromString("Use");
 		Description = FText::FromString("Please enter a description for this item");
 		Value = 10;
+		Quantity = 0;
 	}
 
 
@@ -231,6 +232,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class APickupActor> Itempickup; // 拾取类型对象
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 Quantity;  // 对象的数量
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FText Name; // 对象名字

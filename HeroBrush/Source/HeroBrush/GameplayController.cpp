@@ -10,16 +10,35 @@
 
 void AGameplayController::AddItemToInventoryByID(FName ID)
 {
-	
+	int32 Quantity = 1;
+
 	AGameplayGameMode* GameMode = Cast<AGameplayGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	
 	UDataTable* ItemTable = GameMode->GetItemDB();
 	
 	FInventoryItem* ItemToAdd = ItemTable->FindRow<FInventoryItem>(ID, "");
 
-	UE_LOG(LogTemp, Warning, TEXT("ID:%s"), *ID.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("ID:%s"), *ID.ToString());
 	if (ItemToAdd) {
-		Inventory.Add(*ItemToAdd);
+		bool bItemFound = false;
+
+		// Check if the item already exists in the inventory
+		for (FInventoryItem& InventoryItem : Inventory) {
+			if (InventoryItem.ItemID == ItemToAdd->ItemID) {
+				// Item already exists, increase the quantity
+				InventoryItem.Quantity += Quantity;
+				bItemFound = true;
+				break;
+			}
+		}
+
+		// If the item doesn't exist in inventory, add it
+		if (!bItemFound) {
+			Inventory.Add(*ItemToAdd);
+			//FInventoryItem& InventoryItem = new FInventoryItem();
+			//InventoryItem.Quantity += Quantity;
+
+		}
 	}
 }
 
