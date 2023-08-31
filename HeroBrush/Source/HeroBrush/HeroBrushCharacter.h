@@ -52,7 +52,8 @@ public:
 	
 	//function
 	void ChangeView();
-	void ChangeEnergy(bool IsLong, int TimePeriod, float EnergyRange);
+	UFUNCTION(BlueprintCallable)
+		void ChangeEnergy(bool IsLong, int TimePeriod, float EnergyRange);
 	void ChangeOnceEnergy(float EnergyRange);
 	
 	//Interact with other objects(weapons)
@@ -96,10 +97,22 @@ protected:
 	FTimerHandle TimerHandle_PrimaryAttack;
 	FTimerHandle TimerHandle_PrimaryAttack_CD;
 
+	// 加入特殊状态，霸体状态
 	UPROPERTY(EditAnywhere)
-		bool isQuickAttack = false;
+		bool isQuickAttack = false;  // 快速攻击和霸体状态
+	UPROPERTY(EditAnywhere)
+		float QuickAttackTime = 12.0f;
+	UPROPERTY(EditAnywhere)
+		float QuickAttackCD = 20.0f;
+
+	FTimerHandle QuickAttackLast;
+	FTimerHandle QuickAttackReset;
+	bool CanDoQuickAttack = true; // 是否可以执行
+	void SetCanDoQuickAttackTrue();
+	void SetQuickAttackFalse();
+
 	UFUNCTION(BlueprintCallable)
-		void ChangeQuickAttack();
+		void ChangeQuickAttack(); // 使用魔药来使用，调用这个函数，持续20s
 	UFUNCTION(BlueprintCallable)
 		bool GetIsQucikAttack();
 

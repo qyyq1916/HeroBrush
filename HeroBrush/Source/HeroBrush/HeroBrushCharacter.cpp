@@ -272,7 +272,7 @@ void AHeroBrushCharacter::Burden_Attack_TimeElapsed() {
 
 void AHeroBrushCharacter::Flash_Attack()
 {
-	if (isFlashActive)
+	//if (isFlashActive)
 	{
 		isFlashActive = false;
 		FVector PresentLocation = this->GetActorLocation();
@@ -282,11 +282,29 @@ void AHeroBrushCharacter::Flash_Attack()
 		FromLocation = PresentLocation;
 		AimLocation = NextLocation;
 
-		
+		FHitResult HitResult; // 存储碰撞的结果的变量
+
+		FVector StartTrace = GetActorLocation(); // 射线起始点
+		FVector EndTrace = NextLocation; // 射线终止点。
+		//FCollisionQueryParams QueryParams; // 储存了碰撞相关的信息
+		//QueryParams.AddIgnoredActor(this); // 将我们角色自身忽略掉，减少性能开销
+
+		TArray<AActor*> IgnoreActors;
+
+		//bool bIsHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), StartTrace, EndTrace, TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::ForDuration, HitResult, true);
+		bool bIsHit = UKismetSystemLibrary::LineTraceSingleByProfile(GetWorld(), StartTrace, EndTrace, TEXT("Flash"), false, IgnoreActors, EDrawDebugTrace::ForDuration, HitResult, true);
+
+		FVector RealLocation = NextLocation;
+		if (bIsHit)
+		{
+			UKismetSystemLibrary::PrintString(GetWorld(), HitResult.GetActor()->GetName());
+			RealLocation = HitResult.ImpactPoint - ForwardLocation * 30.0f;
+		}
+
 		if (CurEnergy >= 5.0f) {
 			GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AHeroBrushCharacter::Flash_TimeElapsed, 0.2f);
 			PlayAnimMontage(Flash_In_Anim);
-			this->SetActorLocation(NextLocation, false);
+			this->SetActorLocation(RealLocation, false);
 			PlayAnimMontage(Flash_Out_Anim);
 		}
 		
@@ -325,10 +343,29 @@ void AHeroBrushCharacter::AOE_Attack_TimeElapsed()
 	ChangeEnergy(false, -1, -30.0f);
 }
 
+void AHeroBrushCharacter::SetQuickAttackFalse()
+{
+	isQuickAttack = false;
+	GetWorldTimerManager().ClearTimer(QuickAttackLast);
+}
+void AHeroBrushCharacter::SetCanDoQuickAttackTrue()
+{
+	CanDoQuickAttack = true;
+	GetWorldTimerManager().ClearTimer(QuickAttackReset);
+}
+
 void AHeroBrushCharacter::ChangeQuickAttack()
 {
-	if (isQuickAttack) isQuickAttack = false;
-	else isQuickAttack = true;
+	if (CanDoQuickAttack) {
+		CanDoQuickAttack = false;
+		isQuickAttack = true;
+		ChangeEnergy(false, -1, -20);
+		// cd
+		GetWorldTimerManager().SetTimer(QuickAttackReset, this, &AHeroBrushCharacter::SetCanDoQuickAttackTrue, QuickAttackCD); // 设置在cd秒后执行true，可以进入这个判断
+		// last time
+		GetWorldTimerManager().SetTimer(QuickAttackLast, this, &AHeroBrushCharacter::SetQuickAttackFalse, QuickAttackTime); // 持续时间之后将isquickattack设置回false
+
+	}
 }
 
 bool AHeroBrushCharacter::GetIsQucikAttack()
@@ -345,6 +382,7 @@ void AHeroBrushCharacter::PlayAnimRecovery()
 void AHeroBrushCharacter::Recovery()
 {
 	ChangeHealth(false, -1, 30.0f);
+	ChangeEnergy(false, -1, 30.0f);
 }
 void AHeroBrushCharacter::Tick(float DeltaTime)
 {
@@ -415,12 +453,12 @@ void AHeroBrushCharacter::CheckForInteractables() {
 
 	AGameplayController* controller = Cast<AGameplayController>(GetController()); // 玩家控制器
 
-	/*TArray<AActor*> IgnoreActors;
-	bool bIsHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), StartTrace, EndTrace, TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::ForDuration, HitResult, true);
+	TArray<AActor*> IgnoreActors;
+	bool bIsHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), StartTrace, EndTrace, TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::None, HitResult, true);
 	if (bIsHit)
 	{
 		UKismetSystemLibrary::PrintString(GetWorld(), HitResult.GetActor()->GetName());
-	}*/
+	}
 
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Visibility, QueryParams) && controller) {
 		//检查我们点击的项目是否是一个可交互的项目

@@ -43,7 +43,7 @@ public:
 	
 public:
 	void SetTarget(AActor* NewTarget);
-
+	void RefreshHeadInfo();
 protected:
 	AActor* Target;
 
