@@ -33,7 +33,7 @@ protected:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	//virtual void NotifyActorBeginOverlap(AActor* OtherActor); 
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor); 
 
 	FTimerHandle DeathTimer;
 
@@ -43,6 +43,7 @@ public:
 	// 受伤动画
 	UPROPERTY(EditAnywhere, Category = "Enemy_Effect")
 		UAnimMontage* HurtAnim;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemyknife")
 		AEnemyWeapons* EnemyKnife=nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "knifeMesh")
@@ -66,6 +67,7 @@ public:
 public:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AActor> ProjectileClass;
+	
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AActor> AOEItem;
 	void SpawnKnife();

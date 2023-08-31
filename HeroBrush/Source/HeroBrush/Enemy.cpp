@@ -3,7 +3,9 @@
 
 #include "Enemy.h"
 #include "Kismet/GameplayStatics.h"
+#include "AIController.h"
 #include "Components/WidgetComponent.h"
+#include "BrainComponent.h"
 #include "BaseWeaponBullets.h"
 #include "EnemyWeapons.h"
 #include "Engine/SkeletalMeshSocket.h"
@@ -65,10 +67,24 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-//void AEnemy::NotifyActorBeginOverlap(AActor* OtherActor)
-//{
-//	
-//}
+void AEnemy::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	//CheckTouchActor(OtherActor);
+	if (CurHealth <= 0) {
+		//Destroy();
+		//stop BT 
+		AAIController* AIC = Cast<AAIController>(GetController());
+		if (AIC)
+		{
+			AIC->GetBrainComponent()->StopLogic("dead");
+		}
+		//ragdoll
+		GetMesh()->SetAllBodiesSimulatePhysics(true);
+		GetMesh()->SetCollisionProfileName("Rogdoll");
+		//set lifespan
+		SetLifeSpan(5.0f);
+	}
+}
 
 void AEnemy::SetTarget(AActor* NewTarget)
 {
