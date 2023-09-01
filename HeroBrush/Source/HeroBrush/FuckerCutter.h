@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "HeroCharacter.h"
+#include "GameHeroCharacter.h"
 #include "Enemy.h"
 #include "FuckerCutter.generated.h"
 
@@ -11,29 +11,18 @@
  * 
  */
 UCLASS()
-class HEROBRUSH_API AFuckerCutter : public AHeroCharacter
+class HEROBRUSH_API AFuckerCutter : public AGameHeroCharacter
 {
 	GENERATED_BODY()
 
-public:
-	// Fill out your copyright notice in the Description page of Project Settings.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
-		float TotalEnergy = 100.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
-		float CurEnergy = 100.f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class USpringArmComponent* CameraBoom;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroCamera");
-	class UCameraComponent* CameraThird;
+
 public:
 	AFuckerCutter();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void BeginPlay();
-	virtual void EndPlay();// 想要使用这个销毁定时器
+	//virtual void EndPlay();// 想要使用这个销毁定时器
 	virtual void Tick(float DeltaTime) override;
 	
-	void ChangeEnergy(bool IsLong, int TimePeriod, float EnergyRange);
-	void ChangeOnceEnergy(float EnergyRange);
 	UPROPERTY(BlueprintReadOnly,EditDefaultsOnly, Category = "TArray")
 		TArray<FName> KnifePointNames_Array;//需要获取位置的插槽的名字的容器
 	TArray<FVector> KnifePointLocation_Array;//刀上插槽位置的容器

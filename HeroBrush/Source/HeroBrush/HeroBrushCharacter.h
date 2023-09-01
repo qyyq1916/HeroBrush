@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-#include "HeroCharacter.h"
+#include "GameHeroCharacter.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Components/ProgressBar.h"
@@ -13,37 +13,15 @@
 
 
 UCLASS(config=Game)
-class AHeroBrushCharacter : public AHeroCharacter
+class AHeroBrushCharacter : public AGameHeroCharacter
 {
 	GENERATED_BODY()
 
 public:
 
-	//variables
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Properties, meta = (AllowPrivateAccess = "true"))
-		float SmoothBlendTime = 0.75f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
-		float TotalEnergy = 100.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info)
-		float CurEnergy = 100.f;
-	
 
-	// camera
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class USpringArmComponent* CameraBoom;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroCamera");
 		class UCameraComponent* CameraShoot;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroCamera");
-		class UCameraComponent* CameraThird;
-	
-
-
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-		USkeletalMeshComponent* MyArms;
-	/** Returns Mesh1P subobject **/
-	USkeletalMeshComponent* GetArms() const { return MyArms; }
-	/** Returns FirstPersonCameraComponent subobject **/
-	UCameraComponent* GetFirstPersonCameraComponent() const { return CameraThird; }
 public:
 	AHeroBrushCharacter();
 	
@@ -52,9 +30,7 @@ public:
 	
 	//function
 	void ChangeView();
-	UFUNCTION(BlueprintCallable)
-		void ChangeEnergy(bool IsLong, int TimePeriod, float EnergyRange);
-	void ChangeOnceEnergy(float EnergyRange);
+
 	
 	//Interact with other objects(weapons)
 	UFUNCTION()

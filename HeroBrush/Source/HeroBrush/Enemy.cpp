@@ -9,6 +9,8 @@
 #include "Engine/SkeletalMeshSocket.h"
 #include "Components/ProgressBar.h"
 #include "AOEItem.h"
+#include "Kismet/KismetMathLibrary.h"
+
 // Sets default values
 
 FName AEnemy::WeaponSlot(TEXT("handknife"));
@@ -19,6 +21,8 @@ AEnemy::AEnemy()
 	 PrimaryActorTick.bCanEverTick = true;
 	 StatusWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("StatusWidgetComponent"));
 	 StatusWidgetComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	 
+	
 }
 
 // Called when the game starts or when spawned
@@ -26,12 +30,12 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	auto InfoWidegetClass = LoadClass<UUserWidget>(NULL, TEXT("WidgetBlueprint'/Game/ThirdPerson/Widgets/EnemyStatus.EnemyStatus_C'"));
-
 	StatusWidgetComponent->SetWidgetClass(InfoWidegetClass);
-	StatusWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
-	StatusWidgetComponent->SetPivot(FVector2D(1, 0.5));
-	StatusWidgetComponent->SetDrawSize(FVector2D(120.0f, 10.0f));
+	StatusWidgetComponent->SetWidgetSpace(EWidgetSpace::World);
 	StatusWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 95.0f));
+	MyCharacterController = GetWorld()->GetFirstPlayerController();
+
+
 	if (IsNear) {
 		SpawnKnife();
 	}
@@ -50,6 +54,7 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	RefreshHeadInfo();
+	SetStatusRotation();
 }
 
 
@@ -60,13 +65,10 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-void AEnemy::NotifyActorBeginOverlap(AActor* OtherActor)
-{
-	//CheckTouchActor(OtherActor);
-	if (CurHealth <= 0) {
-		Destroy();
-	}
-}
+//void AEnemy::NotifyActorBeginOverlap(AActor* OtherActor)
+//{
+//	
+//}
 
 void AEnemy::SetTarget(AActor* NewTarget)
 {
@@ -132,4 +134,22 @@ void AEnemy::SpawnKnife() {
 	}
 	
 	
+}
+
+void AEnemy::SetStatusRotation()
+{
+	if (MyCharacterController != nullptr) {
+		ACharacter* MyCharacter = Cast<ACharacter>(MyCharacterController->GetPawn());
+		PlayerCameraManager = MyCharacterController->PlayerCameraManager;
+		
+		FVector CameraLocation = PlayerCameraManager->GetCameraLocation();
+		FVector SceneLocation = StatusWidgetComponent->GetComponentLocation();
+		FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(SceneLocation, CameraLocation);
+		StatusWidgetComponent->SetWorldRotation(LookAtRotation);
+		
+		/*TArray<AActor*> IgnoreActors;
+		FHitResult HitResult;
+		bool bIsHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), SceneLocation, CameraLocation, TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::ForDuration, HitResult, true);
+		*/
+	}
 }

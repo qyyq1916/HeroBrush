@@ -23,29 +23,6 @@
 
 AHeroBrushCharacter::AHeroBrushCharacter()
 {
-	// Create a camera boom (pulls in towards the player if there is a collision)
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
-	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
-
-
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
-	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
-	MyArms = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Character MyArms"));
-	MyArms->SetOnlyOwnerSee(true);
-	MyArms->SetupAttachment(CameraThird);
-	MyArms->bCastDynamicShadow = false;
-	MyArms->CastShadow = false;
-	// MyArms->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
-	MyArms->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
-
-	// Create a follow camera
-	CameraThird = CreateDefaultSubobject<UCameraComponent>(TEXT("HeroThirdCamera"));
-	CameraThird->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	CameraThird->SetRelativeLocation(FVector(20.0f, 100.0f, 100.0f));
-	CameraThird->bUsePawnControlRotation = true; // Camera does not rotate relative to arm
 
 	CameraShoot = CreateDefaultSubobject<UCameraComponent>(TEXT("HeroShootCamera"));
 	CameraShoot->SetupAttachment(CameraBoom);
@@ -162,28 +139,6 @@ void AHeroBrushCharacter::ChangeView()
 		CameraThird->SetActive(true);	
 		CameraShoot->SetActive(false);
 	}
-}
-
-
-
-
-
-
-void AHeroBrushCharacter::ChangeEnergy(bool IsLong, int TimePeriod, float EnergyRange) {
-	if (IsLong) {
-		
-	}
-	else {
-		ChangeOnceEnergy(EnergyRange);
-	}
-}
-void AHeroBrushCharacter::ChangeOnceEnergy(float EnergyRange) {
-	if (CurEnergy + EnergyRange < TotalEnergy && CurEnergy + EnergyRange > 0)
-		CurEnergy += EnergyRange;
-	else if (CurEnergy + EnergyRange >= TotalEnergy)
-		CurEnergy = TotalEnergy;
-	else if (CurEnergy + EnergyRange <= 0)
-		CurEnergy = 0.0f;
 }
 
 //Basic Attack
@@ -368,22 +323,19 @@ void AHeroBrushCharacter::ChangeQuickAttack()
 	}
 }
 
-bool AHeroBrushCharacter::GetIsQucikAttack()
-{
-	return isQuickAttack;
-}
-
 
 void AHeroBrushCharacter::PlayAnimRecovery()
 {
 	float timeperiod = PlayAnimMontage(RecoveryAnim);
 	
 }
+
 void AHeroBrushCharacter::Recovery()
 {
 	ChangeHealth(false, -1, 30.0f);
 	ChangeEnergy(false, -1, 30.0f);
 }
+
 void AHeroBrushCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -398,6 +350,11 @@ void AHeroBrushCharacter::Tick(float DeltaTime)
 	
 	CheckForInteractables();
 
+}
+
+bool AHeroBrushCharacter::GetIsQucikAttack()
+{
+	return isQuickAttack;
 }
 
 void AHeroBrushCharacter::TurnOnSpeed()
@@ -418,9 +375,7 @@ void AHeroBrushCharacter::TurnOffSpeed()
 void AHeroBrushCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	//CheckTouchActor(OtherActor);
-	if (CurHealth <= 0) {
-		PlayAnimMontage(DeathAnim);
-	}
+	
 }
 //void AHeroBrushCharacter::CheckTouchActor(AActor* OtherActor)
 //{

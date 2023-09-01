@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "HeroCharacter.h"
 #include "EnemyWeapons.h"
+#include "Camera/PlayerCameraManager.h"
 #include "Enemy.generated.h"
 
 /**
@@ -15,7 +16,7 @@ UCLASS()
 class HEROBRUSH_API AEnemy : public AHeroCharacter
 {
 	GENERATED_BODY()
-
+		
 public:
 	// Sets default values for this character's properties
 	 AEnemy();
@@ -32,7 +33,7 @@ protected:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	virtual void NotifyActorBeginOverlap(AActor* OtherActor); // 暂时加入到这里测试，后续死亡动画需要在行为树中
+	//virtual void NotifyActorBeginOverlap(AActor* OtherActor); 
 
 	FTimerHandle DeathTimer;
 
@@ -46,6 +47,9 @@ public:
 		AEnemyWeapons* EnemyKnife=nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "knifeMesh")
 		USkeletalMesh* EnemyKnifeMesh;
+	
+	APlayerCameraManager* PlayerCameraManager;
+	APlayerController* MyCharacterController;
 public:
 	void SetTarget(AActor* NewTarget);
 	void RefreshHeadInfo();
@@ -57,7 +61,8 @@ public:
 		void RemoteAttack();
 	UFUNCTION(BlueprintCallable)
 		void AoeAttack();
-
+	UFUNCTION()
+		void SetStatusRotation();
 public:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AActor> ProjectileClass;

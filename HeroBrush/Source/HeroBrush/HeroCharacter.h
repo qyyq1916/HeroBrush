@@ -50,6 +50,8 @@ public:
 		FVector FromLocation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FRotator AimRotation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool isDead = false;
 
 	UFUNCTION()
 		FRotator GetAimRotation();

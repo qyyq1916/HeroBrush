@@ -156,6 +156,14 @@ void AHeroCharacter::ChangeOnceHealth(float HealthRange) {
 		CurHealth = TotalHealth;
 	else if (CurHealth + HealthRange <= 0)
 		CurHealth = 0.0f;
+
+	if (CurHealth <= 0) {
+		isDead = true;
+	}
+	else if (CurHealth > 0) {
+		isDead = false;
+	}
+
 }
 void AHeroCharacter::SetIsEnemyTrue() {
 	IsEnemy = true;
