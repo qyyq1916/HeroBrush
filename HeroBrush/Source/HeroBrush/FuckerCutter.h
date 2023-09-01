@@ -100,7 +100,7 @@ protected:
 
 	void Death();
 	bool IsDead = false;
-	void PlayHurtAnime();
+	
 
 	void CutterFlash();
 	bool CanDoFlash = true;

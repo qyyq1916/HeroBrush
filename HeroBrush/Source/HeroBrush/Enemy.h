@@ -20,6 +20,9 @@ public:
 	// Sets default values for this character's properties
 	 AEnemy();
 
+public:
+	 static FName WeaponSlot;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -32,6 +35,7 @@ protected:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor); // 暂时加入到这里测试，后续死亡动画需要在行为树中
 
 	FTimerHandle DeathTimer;
+
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Info, meta = (AllowPrivateAccess = "true"))
 		class UWidgetComponent* StatusWidgetComponent;
@@ -40,7 +44,8 @@ public:
 		UAnimMontage* HurtAnim;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemyknife")
 		AEnemyWeapons* EnemyKnife=nullptr;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "knifeMesh")
+		USkeletalMesh* EnemyKnifeMesh;
 public:
 	void SetTarget(AActor* NewTarget);
 	void RefreshHeadInfo();
@@ -58,5 +63,6 @@ public:
 		TSubclassOf<AActor> ProjectileClass;
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AActor> AOEItem;
-
+	void SpawnKnife();
+	bool IsNear=true;
 };

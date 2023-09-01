@@ -12,6 +12,9 @@ AEnemyWeapons::AEnemyWeapons()
 
 	KnifeMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
 	KnifeMeshComponent->SetupAttachment(RootComponent);
+
+	EnemyKnifePointNames_Array = { "EnemyWeaponCao1","EnemyWeaponCao2","EnemyWeaponCao3","EnemyWeaponCao4","EnemyWeaponCao5" };
+	EnemyObjectType.Add(EObjectTypeQuery::ObjectTypeQuery3);
 }
 
 
@@ -20,7 +23,7 @@ AEnemyWeapons::AEnemyWeapons()
 void AEnemyWeapons::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	GetTrancePointsLocation();
 }
 
 

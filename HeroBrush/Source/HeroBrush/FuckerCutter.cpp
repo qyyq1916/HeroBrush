@@ -157,9 +157,7 @@ void AFuckerCutter::SetCanDoQTrue()
 void AFuckerCutter::SetAttackSpeedNormal() {
 	AttackSpeed = 1.f;
 }
-void AFuckerCutter::PlayHurtAnime() {
 
-}
 void AFuckerCutter::CutterFlash()
 {
 	if (CanDoFlash) {
