@@ -17,8 +17,11 @@
 
 FName AEnemy::WeaponSlot(TEXT("handknife"));
 
+
 AEnemy::AEnemy()
 {
+	EnemyQuantity++;
+	
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	 PrimaryActorTick.bCanEverTick = true;
 	 StatusWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("StatusWidgetComponent"));
@@ -26,6 +29,7 @@ AEnemy::AEnemy()
 	 
 	
 }
+
 
 // Called when the game starts or when spawned
 void AEnemy::BeginPlay()
@@ -41,6 +45,9 @@ void AEnemy::BeginPlay()
 	if (IsNear) {
 		SpawnKnife();
 	}
+	//FString WidgetClassLoadPath = FString(TEXT("/HeroBrush/Content/ThirdPerson/Widgets/EnemyClearWindow.uasset"));//对应清空怪出现的窗口的文件路径
+	//UClass* Widget = LoadClass<UUserWidget>(NULL, *WidgetClassLoadPath);
+	
 }
 void AEnemy::RefreshHeadInfo()
 {
@@ -57,6 +64,14 @@ void AEnemy::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	RefreshHeadInfo();
 	SetStatusRotation();
+	if (CurHealth <= 0) {
+		EnemyKnife->Destroy();
+		EnemyQuantity--;
+		if (EnemyQuantity == 0) {
+			
+			//
+		}
+	}
 }
 
 
