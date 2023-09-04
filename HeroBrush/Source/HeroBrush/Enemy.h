@@ -10,7 +10,7 @@
 
 /**
  * 
- */static int EnemyQuantity = 0;
+ */
 class UWidgetComponent;
 UCLASS()
 class HEROBRUSH_API AEnemy : public AHeroCharacter
@@ -23,7 +23,6 @@ public:
 
 public:
 	 static FName WeaponSlot;
-	 FString WidgetClassLoadPath;
 
 protected:
 	// Called when the game starts or when spawned
