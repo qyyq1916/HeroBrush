@@ -408,12 +408,12 @@ void AHeroBrushCharacter::CheckForInteractables() {
 
 	AGameplayController* controller = Cast<AGameplayController>(GetController()); // 玩家控制器
 
-	TArray<AActor*> IgnoreActors;
+	/*TArray<AActor*> IgnoreActors;
 	bool bIsHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), StartTrace, EndTrace, TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::None, HitResult, true);
 	if (bIsHit)
 	{
 		UKismetSystemLibrary::PrintString(GetWorld(), HitResult.GetActor()->GetName());
-	}
+	}*/
 
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Visibility, QueryParams) && controller) {
 		//检查我们点击的项目是否是一个可交互的项目

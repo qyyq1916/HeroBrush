@@ -35,9 +35,6 @@ void AGameplayController::AddItemToInventoryByID(FName ID)
 		// If the item doesn't exist in inventory, add it
 		if (!bItemFound) {
 			Inventory.Add(*ItemToAdd);
-			//FInventoryItem& InventoryItem = new FInventoryItem();
-			//InventoryItem.Quantity += Quantity;
-
 		}
 	}
 }
@@ -63,10 +60,26 @@ void AGameplayController::CraftItem(FInventoryItem ItemA, FInventoryItem ItemB, 
 		
 		if (Craft.ComponentID == ItemA.ItemID) {
 			if (Craft.bDestroyItemA) {
-				Inventory.RemoveSingle(ItemA);
+				for (FInventoryItem& InventoryItem : Inventory) {
+					if (ItemA.ItemID == InventoryItem.ItemID) {
+						InventoryItem.Quantity -= 1;
+						if (InventoryItem.Quantity <= 0) {
+							Inventory.RemoveSingle(ItemA);
+						}
+						break;
+					}
+				}
 			}
 			if (Craft.bDestroyItemB) {
-				Inventory.RemoveSingle(ItemB);
+				for (FInventoryItem& InventoryItem : Inventory) {
+					if (ItemB.ItemID == InventoryItem.ItemID) {
+						InventoryItem.Quantity -= 1;
+						if (InventoryItem.Quantity <= 0) {
+							Inventory.RemoveSingle(ItemB);
+						}
+						break;
+					}
+				}
 			}
 			AddItemToInventoryByID(Craft.ProductID);
 
