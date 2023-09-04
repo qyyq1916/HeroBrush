@@ -163,10 +163,10 @@ void AEnemy::SpawnKnife() {
 		//EnemyKnife->KnifeMesh = EnemyKnifeMesh;
 		EnemyKnife->KnifeMeshComponent->SetSkeletalMeshAsset(EnemyKnifeMesh);//设置武器的网格体
 		EnemyKnife->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "handknife");//将刀绑到敌人手上
-		FRotator InstanceRotation = FRotator(-99.84f, -1.728f, -90.f);
-		FVector InstanceVector = FVector(-0.019f, 7.60f, 0.2295f);
-		EnemyKnife->AddActorLocalRotation(InstanceRotation);
-		EnemyKnife->AddActorLocalTransform(FTransform(InstanceVector));
+		//FRotator InstanceRotation = FRotator(-99.84f, -1.728f, -90.f);
+		//FVector InstanceVector = FVector(-0.019f, 7.60f, 0.2295f);
+		//EnemyKnife->AddActorLocalRotation(InstanceRotation);
+		//EnemyKnife->AddActorLocalTransform(FTransform(InstanceVector));
 		/*const USkeletalMeshSocket* Socket = GetMesh()->GetSocketByName("handknife");
 		if (Socket)
 		{
