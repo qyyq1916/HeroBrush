@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Interactable.h"
-
 #include "PickupActor.generated.h"
 
 /**
@@ -23,7 +22,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FName ItemID;
-
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Pickup")
 		void OnUsed();

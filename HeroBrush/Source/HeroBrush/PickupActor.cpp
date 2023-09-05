@@ -3,6 +3,7 @@
 
 #include "PickupActor.h"
 
+
 APickupActor::APickupActor() 
 {
 	PickupMesh = CreateDefaultSubobject<UStaticMeshComponent>("PickupMesh");

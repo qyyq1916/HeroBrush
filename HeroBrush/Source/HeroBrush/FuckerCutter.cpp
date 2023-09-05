@@ -11,6 +11,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Interactable.h"
+#include "GameplayController.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -42,6 +44,7 @@ void AFuckerCutter::Tick(float DeltaTime)
 			Death();
 		}
 	}
+	CheckForInteractables();
 	
 }
 void AFuckerCutter::Death() {
@@ -192,4 +195,43 @@ void AFuckerCutter::MontageWindowBegin_Delay()
 		}
 	}
 	GetTrancePointsLocation();
+}
+
+void AFuckerCutter::CheckForInteractables() {
+	// 射线拾取
+	FHitResult CutterHitResult; // 存储碰撞的结果的变量
+
+	FVector CameraLocation;
+	FRotator CameraRotation;
+	GetActorEyesViewPoint(CameraLocation, CameraRotation);
+
+	FVector MuzzleOffset;
+	MuzzleOffset.Set(100.0f, 50.0f, 20.0f);
+
+	FVector StartTrace = CameraLocation; // 射线起始点
+	FVector EndTrace = (FTransform(CameraRotation).TransformVector(MuzzleOffset))*2.f + StartTrace; // 射线终止点。
+
+	FCollisionQueryParams QueryParams; // 储存了碰撞相关的信息
+	QueryParams.AddIgnoredActor(this); // 将我们角色自身忽略掉，减少性能开销
+
+	AGameplayController* controller = Cast<AGameplayController>(GetController()); // 玩家控制器
+
+	TArray<AActor*> IgnoreActors;
+	bool bIsHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), StartTrace, EndTrace, TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::ForDuration, CutterHitResult, true);
+	if (bIsHit)
+	{
+		UKismetSystemLibrary::PrintString(GetWorld(), CutterHitResult.GetActor()->GetName());
+	}
+
+	if (GetWorld()->LineTraceSingleByChannel(CutterHitResult, StartTrace, EndTrace, ECC_Visibility, QueryParams) && controller) {
+		//检查我们点击的项目是否是一个可交互的项目
+		if (AInteractable* Interactable = Cast<AInteractable>(CutterHitResult.GetActor())) {
+			controller->CurrentInteractable = Interactable;
+			return;
+		}
+	}
+
+	//如果我们没有击中任何东西，或者我们击中的东西不是一个可交互的，设置currentinteractable为nullptr
+	controller->CurrentInteractable = nullptr;
+
 }

@@ -39,7 +39,7 @@ void AGameplayController::AddItemToInventoryByID(FName ID)
 	}
 }
 
-void AGameplayController::MinusItemToInventoryByID(FName ID) 
+void AGameplayController::MinusItemToInventoryByID(FName ID)
 {
 	int32 Quantity = 1;
 
@@ -50,16 +50,21 @@ void AGameplayController::MinusItemToInventoryByID(FName ID)
 	FInventoryItem* ItemToMinus = ItemTable->FindRow<FInventoryItem>(ID, "");
 
 	if (ItemToMinus) {
+		bool bItemFound = false;
+
 		// Check if the item already exists in the inventory
 		for (FInventoryItem& InventoryItem : Inventory) {
 			if (InventoryItem.ItemID == ItemToMinus->ItemID) {
 				// Item already exists, increase the quantity
 				InventoryItem.Quantity -= Quantity;
-				if (InventoryItem.Quantity == 0) {
-					Inventory.RemoveSingle(*ItemToMinus);
-				}
+				bItemFound = true;
 				break;
 			}
+		}
+
+		// If the item doesn't exist in inventory, add it
+		if (!bItemFound) {
+			Inventory.RemoveSingle(*ItemToMinus);
 		}
 	}
 }

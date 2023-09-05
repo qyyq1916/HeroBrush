@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameHeroCharacter.h"
 #include "Enemy.h"
+#include "Engine/DataTable.h"
 #include "FuckerCutter.generated.h"
 
 /**
@@ -60,6 +61,7 @@ protected:
 
 	void Primary_Attack();
 
+	void CheckForInteractables();
 
 	void PrimaryAttack_TimeElapsed();
 	UPROPERTY(BlueprintReadOnly, Category = "Man")
@@ -99,3 +101,4 @@ protected:
 	void SetSpeedNormal();
 	FTimerHandle FlashLast;
 };
+
