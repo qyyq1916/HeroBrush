@@ -10,7 +10,7 @@
 
 /**
  * 
- */
+ */static int EnemyQuantity = 0;
 class UWidgetComponent;
 UCLASS()
 class HEROBRUSH_API AEnemy : public AHeroCharacter
@@ -20,10 +20,11 @@ class HEROBRUSH_API AEnemy : public AHeroCharacter
 public:
 	// Sets default values for this character's properties
 	 AEnemy();
-
+	 bool IsFirstTime=true;
 public:
 	 static FName WeaponSlot;
-
+	 UUserWidget* EnemyClearWindows;
+	 int EnemyTotal=0;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

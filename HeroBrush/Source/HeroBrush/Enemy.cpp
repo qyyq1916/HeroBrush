@@ -19,6 +19,8 @@ FName AEnemy::WeaponSlot(TEXT("handknife"));
 
 AEnemy::AEnemy()
 {
+	
+	EnemyClearWindows = nullptr;
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	 PrimaryActorTick.bCanEverTick = true;
 	 StatusWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("StatusWidgetComponent"));
@@ -30,6 +32,8 @@ AEnemy::AEnemy()
 // Called when the game starts or when spawned
 void AEnemy::BeginPlay()
 {
+	EnemyQuantity++;
+	EnemyTotal = EnemyQuantity;
 	Super::BeginPlay();
 	auto InfoWidegetClass = LoadClass<UUserWidget>(NULL, TEXT("WidgetBlueprint'/Game/ThirdPerson/Widgets/EnemyStatus.EnemyStatus_C'"));
 	StatusWidgetComponent->SetWidgetClass(InfoWidegetClass);
@@ -57,6 +61,25 @@ void AEnemy::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	RefreshHeadInfo();
 	SetStatusRotation();
+	if (CurHealth <= 0) {
+		if (IsFirstTime) {
+			IsFirstTime = false;
+			EnemyKnife->Destroy();
+			EnemyQuantity--;
+			if (EnemyQuantity == 0) {
+				UClass* EnemyClearWindowsClass = LoadClass<UUserWidget>(nullptr, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/ThirdPerson/Widgets/ClearWindows.ClearWindows_C'"));
+				if (APlayerController* PC = GetWorld()->GetFirstPlayerController()) {
+					EnemyClearWindows = CreateWidget(PC, EnemyClearWindowsClass);
+					if (EnemyClearWindows) {
+						EnemyClearWindows->AddToViewport();
+					}
+				}
+			}
+		}
+	}
+
+
+
 }
 
 

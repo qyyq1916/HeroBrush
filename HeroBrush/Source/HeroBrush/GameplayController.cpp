@@ -7,6 +7,7 @@
 #include "Kismet/KismetStringLibrary.h"
 #include "Interactable.h"
 #include "HeroBrushCharacter.h"
+#include "FuckerCutter.h"
 
 void AGameplayController::AddItemToInventoryByID(FName ID)
 {
@@ -112,4 +113,3 @@ void AGameplayController::CraftItem(FInventoryItem ItemA, FInventoryItem ItemB, 
 		}
 	}
 }
-

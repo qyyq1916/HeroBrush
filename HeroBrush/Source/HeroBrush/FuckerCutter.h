@@ -84,9 +84,11 @@ protected:
 	void SetAttackSpeedNormal();
 	FTimerHandle QSkillLast;
 
-
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	float NowAttackDamage = 20.f;
-	float BaseAttackDamage=20.f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float BaseAttackDamage=0.0f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float RAttackDamage=100.f;
 
 	void Death();
