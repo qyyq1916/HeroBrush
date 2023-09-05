@@ -26,7 +26,7 @@ public:
 		void AddItemToInventoryByID(FName ID);
 
 	UFUNCTION(BlueprintCallable, Category = "Utils")
-		void MinusItemToInventoryByID(FName ID);
+		int MinusItemToInventoryByID(FName ID);
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void ReloadInventory();
