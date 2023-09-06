@@ -20,7 +20,15 @@ class HEROBRUSH_API AEnemy : public AHeroCharacter
 public:
 	// Sets default values for this character's properties
 	 AEnemy();
+	 
 	 bool IsFirstTime=true;
+	 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+		 USoundWave* PirAttackSound;
+	 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+		 USoundWave* PirAttackSound2;
+	
+	 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+		 USoundWave* DeadSound;
 public:
 	 static FName WeaponSlot;
 	 UUserWidget* EnemyClearWindows;

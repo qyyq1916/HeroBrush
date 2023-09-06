@@ -41,7 +41,13 @@ void AFuckerCutter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	CheckForInteractables();
-	
+	if (dead == false) {
+		if (CurHealth <= 0) {
+			dead = true;
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), DeadSound, this->GetActorLocation());
+		
+		}
+	}
 }
 
 
@@ -65,6 +71,7 @@ void AFuckerCutter::Primary_Attack() {
 	if (CanDoAttack) {
 		if (AttackAnimSeq == 0) {
 			NowAttackDamage = BaseAttackDamage;//修正造成的伤害数值为普攻伤害数值
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), PirAttackSound, this->GetActorLocation());
 			PlayAnimMontage(AttackAnim1);
 			CanDoAttack = false;
 			AttackAnimSeq++;
@@ -85,6 +92,7 @@ void AFuckerCutter::Primary_Attack() {
 			AttackAnimSeq = AttackAnimSeq % 4;
 		}
 		else if (AttackAnimSeq == 3) {
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), PirAttackSound2, this->GetActorLocation());
 			NowAttackDamage = BaseAttackDamage;
 			PlayAnimMontage(AttackAnim4);
 			CanDoAttack = false;
@@ -99,6 +107,7 @@ void AFuckerCutter::SetCanDoAttackTrue() {
 }
 void AFuckerCutter::RAbility() {
 	if (CanDoR) {
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), RAttackSound, this->GetActorLocation());
 		CanDoR = false;
 		ChangeEnergy(false, -1, -20);
 		NowAttackDamage = RAttackDamage;
@@ -114,6 +123,7 @@ void AFuckerCutter::SetCanDoRTrue() {
 void AFuckerCutter::QAbility()
 {
 	if (CanDoQ) {
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), QAttackSound, this->GetActorLocation());
 		CanDoQ = false;
 		ChangeEnergy(false, -1, -20);
 		AttackSpeed = 0.3f;
