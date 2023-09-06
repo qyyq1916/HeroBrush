@@ -86,7 +86,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 		bool isQuickAttack = false;  // 快速攻击和霸体状态
 	UPROPERTY(EditAnywhere)
-		float QuickAttackTime = 6.0f;
+		float QuickAttackTime = 10.0f;
 	UPROPERTY(EditAnywhere)
 		float QuickAttackCD = 15.0f;
 
@@ -100,6 +100,17 @@ protected:
 		void ChangeQuickAttack(); // 使用魔药来使用，调用这个函数，持续20s
 	UFUNCTION(BlueprintCallable)
 		bool GetIsQucikAttack();
+
+	UPROPERTY()
+		USkeletalMeshComponent* Skeletal;
+	UPROPERTY(EditAnywhere, Category = "Skeleton_Info")
+		USkeletalMesh* FirstSeketal;
+	UPROPERTY(EditAnywhere, Category = "Skeleton_Info")
+		USkeletalMesh* SecondSeketal;
+	UFUNCTION()
+		void ChangeSkeletonToCool();
+	UFUNCTION()
+		void ChangeSkeletonToNormal();
 
 	int AttackAnimSeq = 0; // anim control
 	FVector HandLocation; // attack的出发点

@@ -16,7 +16,7 @@
 #include "Weapon.h"
 #include "GameplayController.h"
 #include "Interactable.h"
-
+#include "Enemy.h"
 #include "AOEItem.h"
 //////////////////////////////////////////////////////////////////////////
 // AHeroBrushCharacter
@@ -27,7 +27,7 @@ AHeroBrushCharacter::AHeroBrushCharacter()
 	CameraShoot = CreateDefaultSubobject<UCameraComponent>(TEXT("HeroShootCamera"));
 	CameraShoot->SetupAttachment(CameraBoom);
 	CameraShoot->SetRelativeLocation(FVector(30.0f, 80.0f, 80.0f));
-
+	AEnemy::EnemyQuantity = 0;
 }
 
 void AHeroBrushCharacter::BeginPlay()
@@ -307,6 +307,7 @@ void AHeroBrushCharacter::SetQuickAttackFalse()
 {
 	isQuickAttack = false;
 	GetWorldTimerManager().ClearTimer(QuickAttackLast);
+	ChangeSkeletonToNormal();
 }
 void AHeroBrushCharacter::SetCanDoQuickAttackTrue()
 {
@@ -320,6 +321,7 @@ void AHeroBrushCharacter::ChangeQuickAttack()
 		CanDoQuickAttack = false;
 		isQuickAttack = true;
 		ChangeEnergy(false, -1, -20);
+		ChangeSkeletonToCool();
 		// cd
 		GetWorldTimerManager().SetTimer(QuickAttackReset, this, &AHeroBrushCharacter::SetCanDoQuickAttackTrue, QuickAttackCD); // 设置在cd秒后执行true，可以进入这个判断
 		// last time
@@ -328,6 +330,34 @@ void AHeroBrushCharacter::ChangeQuickAttack()
 	}
 }
 
+void AHeroBrushCharacter::ChangeSkeletonToCool()
+{
+	Skeletal = GetMesh();
+
+	if (Skeletal) {
+		if (SecondSeketal) 
+		{
+			Skeletal->SetSkeletalMesh(SecondSeketal);
+			// Skeletal->SetRelativeLocation(FVector(0,0,-90));
+			// Skeletal->SetRelativeRotation(FRotator(0,0,270));
+			Skeletal->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+		}
+	}	
+}
+
+void AHeroBrushCharacter::ChangeSkeletonToNormal()
+{
+	Skeletal = GetMesh();
+	if (Skeletal) {
+		if (SecondSeketal) 
+		{
+			Skeletal->SetSkeletalMesh(FirstSeketal);
+			// Skeletal->SetRelativeLocation(FVector(0,0,-90));
+			// Skeletal->SetRelativeRotation(FRotator(0,0,270));
+			Skeletal->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+		}
+	}	
+}
 
 void AHeroBrushCharacter::PlayAnimRecovery()
 {

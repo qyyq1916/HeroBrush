@@ -10,7 +10,7 @@
 
 /**
  * 
- */static int EnemyQuantity = 0;
+ */
 class UWidgetComponent;
 UCLASS()
 class HEROBRUSH_API AEnemy : public AHeroCharacter
@@ -22,6 +22,7 @@ public:
 	 AEnemy();
 	 
 	 bool IsFirstTime=true;
+	 static int EnemyQuantity;
 	 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 		 USoundWave* PirAttackSound;
 	 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
@@ -82,3 +83,4 @@ public:
 	void SpawnKnife();
 	bool IsNear=true;
 };
+int AEnemy::EnemyQuantity = 0;
