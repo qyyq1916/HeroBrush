@@ -41,7 +41,7 @@ void AGameplayController::AddItemToInventoryByID(FName ID)
 	}
 }
 
-int AGameplayController::MinusItemToInventoryByID(FName ID) 
+void AGameplayController::MinusItemToInventoryByID(FName ID, int& OriginQuantity, int& AfterQuantity)
 {
 	int32 Quantity = 1;
 
@@ -51,37 +51,18 @@ int AGameplayController::MinusItemToInventoryByID(FName ID)
 
 	FInventoryItem* ItemToMinus = ItemTable->FindRow<FInventoryItem>(ID, "");
 
+	OriginQuantity = 0;
+
 	if (ItemToMinus) {
 		// Check if the item already exists in the inventory
 		for (FInventoryItem& InventoryItem : Inventory) {
 			if (InventoryItem.ItemID == ItemToMinus->ItemID) {
 				// Item already exists, decrease the quantity
+				OriginQuantity = InventoryItem.Quantity;
 				InventoryItem.Quantity -= Quantity;
-				if (InventoryItem.Quantity <= 0) {
-					return 0;
-				}
-				return InventoryItem.Quantity;
-			}
-		}
-	}
-	return 0;
-}
-
-void AGameplayController::RemoveItemToInventoryByID(FName ID)
-{
-	AGameplayGameMode* GameMode = Cast<AGameplayGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-
-	UDataTable* ItemTable = GameMode->GetItemDB();
-
-	FInventoryItem* ItemToRemove = ItemTable->FindRow<FInventoryItem>(ID, "");
-
-	if (ItemToRemove) {
-		// Check if the item already exists in the inventory
-		for (FInventoryItem& InventoryItem : Inventory) {
-			if (InventoryItem.ItemID == ItemToRemove->ItemID) {
-				// Item already exists and the quantity equals 0, remove this Item
-				if (InventoryItem.Quantity == 0) {
-					Inventory.RemoveSingle(*ItemToRemove);
+				AfterQuantity = InventoryItem.Quantity;
+				if (AfterQuantity <= 0) {
+					Inventory.RemoveSingle(*ItemToMinus);
 				}
 			}
 		}
