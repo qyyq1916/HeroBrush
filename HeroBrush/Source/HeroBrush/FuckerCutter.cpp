@@ -39,18 +39,11 @@ void AFuckerCutter::BeginPlay()
 void AFuckerCutter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (IsDead == false) {
-		if (CurHealth <= 0) {
-			Death();
-		}
-	}
+	
 	CheckForInteractables();
 	
 }
-void AFuckerCutter::Death() {
-	IsDead = true;
-	PlayAnimMontage(DeathAnim);
-}
+
 
 void AFuckerCutter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -125,6 +118,7 @@ void AFuckerCutter::QAbility()
 		ChangeEnergy(false, -1, -20);
 		AttackSpeed = 0.3f;
 		PlayAnimMontage(QAbilityAnim);
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), PirAttackSound, this->GetActorLocation());
 		GetWorldTimerManager().SetTimer(QSkillReset, this, &AFuckerCutter::SetCanDoQTrue, QSkillCD, false);//cd12秒
 		GetWorldTimerManager().SetTimer(QSkillLast, this, &AFuckerCutter::SetAttackSpeedNormal, 6, false);//加攻速6秒
 	}
@@ -183,13 +177,14 @@ void AFuckerCutter::MontageWindowEnd()
 void AFuckerCutter::MontageWindowBegin_Delay()
 {
 	for (int i = 0; i < KnifePointNames_Array.Num(); i++) {
-		UKismetSystemLibrary::LineTraceMultiForObjects(this, KnifePointLocation_Array[i],GetMesh()->GetSocketLocation(KnifePointNames_Array[i]),ObjectType,false,IgnoreActors_Array,EDrawDebugTrace::None,HitResult,true); // EDrawDebugTrace::ForDuration
+		UKismetSystemLibrary::LineTraceMultiForObjects(this, KnifePointLocation_Array[i],GetMesh()->GetSocketLocation(KnifePointNames_Array[i]),ObjectType,false,IgnoreActors_Array,EDrawDebugTrace::ForDuration,HitResult,true); // EDrawDebugTrace::ForDuration
 		for (int j = 0; j < HitResult.Num(); j++) {
 			HittingEnemy = Cast<AEnemy>(HitResult[j].GetActor());
 			if (HittingEnemy) {
 				if (!HittingEnemy_Array.Contains(HittingEnemy)) {
 					HittingEnemy_Array.AddUnique(HittingEnemy);
 					HittingEnemy->ChangeHealth(false, -1, -NowAttackDamage);
+					ChangeHealth(false, -1, 0.25*NowAttackDamage);
 				}
 			}
 		}
@@ -216,12 +211,12 @@ void AFuckerCutter::CheckForInteractables() {
 
 	AGameplayController* controller = Cast<AGameplayController>(GetController()); // 玩家控制器
 
-	TArray<AActor*> IgnoreActors;
+	/*TArray<AActor*> IgnoreActors;
 	bool bIsHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), StartTrace, EndTrace, TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::ForDuration, CutterHitResult, true);
 	if (bIsHit)
 	{
 		UKismetSystemLibrary::PrintString(GetWorld(), CutterHitResult.GetActor()->GetName());
-	}
+	}*/
 
 	if (GetWorld()->LineTraceSingleByChannel(CutterHitResult, StartTrace, EndTrace, ECC_Visibility, QueryParams) && controller) {
 		//检查我们点击的项目是否是一个可交互的项目

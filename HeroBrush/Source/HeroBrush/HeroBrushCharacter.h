@@ -77,9 +77,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 		bool isQuickAttack = false;  // 快速攻击和霸体状态
 	UPROPERTY(EditAnywhere)
-		float QuickAttackTime = 12.0f;
+		float QuickAttackTime = 6.0f;
 	UPROPERTY(EditAnywhere)
-		float QuickAttackCD = 20.0f;
+		float QuickAttackCD = 15.0f;
 
 	FTimerHandle QuickAttackLast;
 	FTimerHandle QuickAttackReset;

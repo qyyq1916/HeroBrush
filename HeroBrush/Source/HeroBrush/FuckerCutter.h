@@ -35,6 +35,15 @@ public:
 	void  MontageWindowBegin();
 	void  MontageWindowEnd();
 	void  MontageWindowBegin_Delay();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+		USoundWave* PirAttackSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+		USoundWave* QAttackSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+		USoundWave* RAttackSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+		USoundWave* DeasdSound;
 protected:
 	UPROPERTY(EditAnywhere, Category = "Primary_Attack")
 		UAnimMontage* AttackAnim1;
@@ -91,8 +100,6 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float RAttackDamage=100.f;
 
-	void Death();
-	bool IsDead = false;
 	
 
 	void CutterFlash();
