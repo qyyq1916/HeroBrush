@@ -38,7 +38,16 @@ public:
 
 	void SetWeapon(class AWeapon* Weapon);
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+		USoundWave* PirAttackSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+		USoundWave* PirAttackSound2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+		USoundWave* QAttackSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+		USoundWave* RAttackSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+		USoundWave* DeadSound;
 	// inline function
 	///** Returns CameraBoom subobject **/
 	//FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

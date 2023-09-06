@@ -18,6 +18,7 @@ class HEROBRUSH_API AFuckerCutter : public AGameHeroCharacter
 
 
 public:
+	bool dead = false;
 	AFuckerCutter();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void BeginPlay();
@@ -39,11 +40,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 		USoundWave* PirAttackSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+		USoundWave* PirAttackSound2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 		USoundWave* QAttackSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 		USoundWave* RAttackSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
-		USoundWave* DeasdSound;
+		USoundWave* DeadSound;
 protected:
 	UPROPERTY(EditAnywhere, Category = "Primary_Attack")
 		UAnimMontage* AttackAnim1;

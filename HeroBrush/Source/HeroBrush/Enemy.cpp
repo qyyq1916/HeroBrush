@@ -119,6 +119,7 @@ void AEnemy::SetTarget(AActor* NewTarget)
 
 void AEnemy::RemoteAttack()
 {
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), PirAttackSound, this->GetActorLocation());
 	FVector BowLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
 	FVector Direction = Target->GetActorLocation() - BowLocation;
@@ -137,6 +138,7 @@ void AEnemy::RemoteAttack()
 
 void AEnemy::AoeAttack()
 {
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), PirAttackSound2, this->GetActorLocation());
 	FVector BowLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
 	FVector Direction = Target->GetActorLocation() - BowLocation;

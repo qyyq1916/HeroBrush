@@ -164,6 +164,7 @@ void AHeroBrushCharacter::PlayPrimaryAttackAnim()
 {
 	if (AttackAnimSeq == 0) {
 		PlayAnimMontage(AttackAnim1);
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), PirAttackSound, this->GetActorLocation());
 		HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 		AttackAnimSeq++;
 		AttackAnimSeq = AttackAnimSeq % 3;
@@ -176,6 +177,7 @@ void AHeroBrushCharacter::PlayPrimaryAttackAnim()
 	}
 	else if (AttackAnimSeq == 2) {
 		PlayAnimMontage(AttackAnim3);
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), PirAttackSound2, this->GetActorLocation());
 		HandLocation = GetMesh()->GetSocketLocation("Muzzle_03");
 		AttackAnimSeq++;
 		AttackAnimSeq = AttackAnimSeq % 3;
@@ -201,9 +203,11 @@ void AHeroBrushCharacter::Burden_Attack()
 {
 	if (CurEnergy >= 5.0f) {
 		if (!isQuickAttack)
+			
 			PlayAnimMontage(BurdenAnim);
 		else
 			PlayAnimMontage(BurdenFastAnim);
+			
 		HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 	}
 	
@@ -285,6 +289,7 @@ void AHeroBrushCharacter::AOE_Attack()
 {
 	if (CurEnergy >= 30)
 		PlayAnimMontage(AOEAnim);
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), RAttackSound, this->GetActorLocation());
 }
 void AHeroBrushCharacter::AOE_Attack_TimeElapsed()
 {
