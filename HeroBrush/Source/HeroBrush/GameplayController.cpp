@@ -8,6 +8,7 @@
 #include "Interactable.h"
 #include "HeroBrushCharacter.h"
 #include "FuckerCutter.h"
+#include "GameHeroCharacter.h"
 
 void AGameplayController::AddItemToInventoryByID(FName ID)
 {
@@ -54,10 +55,9 @@ int AGameplayController::MinusItemToInventoryByID(FName ID)
 		// Check if the item already exists in the inventory
 		for (FInventoryItem& InventoryItem : Inventory) {
 			if (InventoryItem.ItemID == ItemToMinus->ItemID) {
-				// Item already exists, increase the quantity
+				// Item already exists, decrease the quantity
 				InventoryItem.Quantity -= Quantity;
 				if (InventoryItem.Quantity <= 0) {
-					Inventory.RemoveSingle(*ItemToMinus);
 					return 0;
 				}
 				return InventoryItem.Quantity;
@@ -65,6 +65,27 @@ int AGameplayController::MinusItemToInventoryByID(FName ID)
 		}
 	}
 	return 0;
+}
+
+void AGameplayController::RemoveItemToInventoryByID(FName ID)
+{
+	AGameplayGameMode* GameMode = Cast<AGameplayGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+	UDataTable* ItemTable = GameMode->GetItemDB();
+
+	FInventoryItem* ItemToRemove = ItemTable->FindRow<FInventoryItem>(ID, "");
+
+	if (ItemToRemove) {
+		// Check if the item already exists in the inventory
+		for (FInventoryItem& InventoryItem : Inventory) {
+			if (InventoryItem.ItemID == ItemToRemove->ItemID) {
+				// Item already exists and the quantity equals 0, remove this Item
+				if (InventoryItem.Quantity == 0) {
+					Inventory.RemoveSingle(*ItemToRemove);
+				}
+			}
+		}
+	}
 }
 
 void AGameplayController::Interact()

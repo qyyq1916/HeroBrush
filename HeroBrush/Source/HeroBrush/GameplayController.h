@@ -28,6 +28,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Utils")
 		int MinusItemToInventoryByID(FName ID);
 
+	UFUNCTION(BlueprintCallable, Category = "Utils")
+		void RemoveItemToInventoryByID(FName ID);
+
 	UFUNCTION(BlueprintImplementableEvent)
 		void ReloadInventory();
 
