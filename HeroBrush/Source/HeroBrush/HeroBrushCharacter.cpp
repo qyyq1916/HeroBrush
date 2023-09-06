@@ -251,7 +251,7 @@ void AHeroBrushCharacter::Flash_Attack()
 		TArray<AActor*> IgnoreActors;
 
 		//bool bIsHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), StartTrace, EndTrace, TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::ForDuration, HitResult, true);
-		bool bIsHit = UKismetSystemLibrary::LineTraceSingleByProfile(GetWorld(), StartTrace, EndTrace, TEXT("Flash"), false, IgnoreActors, EDrawDebugTrace::ForDuration, HitResult, true);
+		bool bIsHit = UKismetSystemLibrary::LineTraceSingleByProfile(GetWorld(), StartTrace, EndTrace, TEXT("Flash"), false, IgnoreActors, EDrawDebugTrace::None, HitResult, true);
 
 		FVector RealLocation = NextLocation;
 		if (bIsHit)

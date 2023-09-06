@@ -105,7 +105,7 @@ void AEnemy::NotifyActorBeginOverlap(AActor* OtherActor)
 		GetMesh()->SetAllBodiesSimulatePhysics(true);
 		GetMesh()->SetCollisionProfileName("Rogdoll");
 		//set lifespan
-		SetLifeSpan(5.0f);
+		SetLifeSpan(3.0f);
 	}
 }
 

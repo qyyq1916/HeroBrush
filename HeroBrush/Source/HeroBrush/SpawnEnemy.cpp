@@ -19,7 +19,7 @@ void ASpawnEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	SpawnSomeEnemy();
-	SetLifeSpan(10.0f);
+	SetLifeSpan(SpawnTime);
 }
 
 // Called every frame
@@ -31,7 +31,7 @@ void ASpawnEnemy::Tick(float DeltaTime)
 
 void ASpawnEnemy::SpawnSomeEnemy()
 {
-	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnEnemy::SpawnOneEnemy, 2.0f, true, 2.0f);
+	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnEnemy::SpawnOneEnemy, SpawnPeriod, true, SpawnAppearTime);
 }
 void ASpawnEnemy::SpawnOneEnemy()
 {

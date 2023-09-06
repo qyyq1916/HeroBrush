@@ -17,7 +17,13 @@ public:
 	ASpawnEnemy();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class AEnemy> New_Enemy;
-	UFUNCTION()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float SpawnPeriod = 2.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float SpawnTime = 10.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float SpawnAppearTime = 0.0f;
+		UFUNCTION()
 		void SpawnSomeEnemy();
 	UFUNCTION()
 		void SpawnOneEnemy();
