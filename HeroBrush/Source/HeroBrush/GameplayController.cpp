@@ -40,7 +40,7 @@ void AGameplayController::AddItemToInventoryByID(FName ID)
 	}
 }
 
-void AGameplayController::MinusItemToInventoryByID(FName ID) 
+int AGameplayController::MinusItemToInventoryByID(FName ID) 
 {
 	int32 Quantity = 1;
 
@@ -56,13 +56,15 @@ void AGameplayController::MinusItemToInventoryByID(FName ID)
 			if (InventoryItem.ItemID == ItemToMinus->ItemID) {
 				// Item already exists, increase the quantity
 				InventoryItem.Quantity -= Quantity;
-				if (InventoryItem.Quantity == 0) {
+				if (InventoryItem.Quantity <= 0) {
 					Inventory.RemoveSingle(*ItemToMinus);
+					return 0;
 				}
-				break;
+				return InventoryItem.Quantity;
 			}
 		}
 	}
+	return 0;
 }
 
 void AGameplayController::Interact()
