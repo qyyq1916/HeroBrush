@@ -100,8 +100,6 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float RAttackDamage=100.f;
 
-	void Death();
-	bool IsDead = false;
 	
 
 	void CutterFlash();

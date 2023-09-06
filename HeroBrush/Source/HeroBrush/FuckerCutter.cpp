@@ -39,18 +39,11 @@ void AFuckerCutter::BeginPlay()
 void AFuckerCutter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (IsDead == false) {
-		if (CurHealth <= 0) {
-			Death();
-		}
-	}
+	
 	CheckForInteractables();
 	
 }
-void AFuckerCutter::Death() {
-	IsDead = true;
-	PlayAnimMontage(DeathAnim);
-}
+
 
 void AFuckerCutter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
