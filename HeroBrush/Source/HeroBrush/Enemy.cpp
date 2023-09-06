@@ -67,7 +67,7 @@ void AEnemy::Tick(float DeltaTime)
 			EnemyKnife->Destroy();
 			EnemyQuantity--;
 			if (EnemyQuantity == 0) {
-				UClass* EnemyClearWindowsClass = LoadClass<UUserWidget>(nullptr, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/ThirdPerson/Widgets/ClearWindows.ClearWindows_C'"));
+				UClass* EnemyClearWindowsClass = LoadClass<UUserWidget>(nullptr, TEXT("/Game/ThirdPerson/Widgets/ClearWindows.ClearWindows_C"));
 				if (APlayerController* PC = GetWorld()->GetFirstPlayerController()) {
 					EnemyClearWindows = CreateWidget(PC, EnemyClearWindowsClass);
 					if (EnemyClearWindows) {
